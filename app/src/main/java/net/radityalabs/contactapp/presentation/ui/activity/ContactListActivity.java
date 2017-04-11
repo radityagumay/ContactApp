@@ -1,4 +1,4 @@
-package net.radityalabs.contactapp;
+package net.radityalabs.contactapp.presentation.ui.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,7 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity
+import net.radityalabs.contactapp.R;
+
+public class ContactListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
