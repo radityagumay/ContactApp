@@ -17,4 +17,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="recycleview_style">
+        <item name="android:background">@null</item>
+        <item name="android:divider">@null</item>
+        <item name="android:scrollbarSize">5dp</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_thumb_vertical</item>
+        <item name="android:scrollbars">vertical</item>
+    </style>
+
 </resources>

@@ -109,5 +109,4 @@ public class ContactListResponse implements Parcelable {
                 ", detailUrl='" + detailUrl + '\'' +
                 '}';
     }
-
 }

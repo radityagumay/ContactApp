@@ -94,6 +94,7 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment imp
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        onDestroyUI();
         mUnbinder.unbind();
     }
 
@@ -122,6 +123,8 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment imp
     protected abstract void setupInjection();
 
     protected abstract void setupEventAndData();
+
+    protected abstract void onDestroyUI();
 
     protected abstract int getLayoutId();
 }
