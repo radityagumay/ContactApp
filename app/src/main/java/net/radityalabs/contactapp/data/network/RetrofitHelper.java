@@ -11,4 +11,9 @@ public class RetrofitHelper {
     public RetrofitHelper(RestService restService) {
         this.mRestService = restService;
     }
+
+    /* default rest service */
+    public RestService getRestService() {
+        return mRestService;
+    }
 }

@@ -16,13 +16,13 @@ public class RxPresenter<T extends BaseView> implements BasePresenter<T> {
     protected T mView;
     protected CompositeDisposable mCompositeSubscription;
 
-    protected void unSubscribe() {
+    protected void dispose() {
         if (mCompositeSubscription != null) {
             mCompositeSubscription.clear();
         }
     }
 
-    protected void addSubscrebe(Disposable subscription) {
+    protected void addDisposable(Disposable subscription) {
         if (mCompositeSubscription == null) {
             mCompositeSubscription = new CompositeDisposable();
         }
@@ -44,6 +44,6 @@ public class RxPresenter<T extends BaseView> implements BasePresenter<T> {
     @Override
     public void detachView() {
         this.mView = null;
-        unSubscribe();
+        dispose();
     }
 }

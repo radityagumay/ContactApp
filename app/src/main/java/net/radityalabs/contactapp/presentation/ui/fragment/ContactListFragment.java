@@ -43,7 +43,7 @@ public class ContactListFragment extends BaseFragment<ContactListFragmentPresent
 
     @Override
     protected void setupEventAndData() {
-
+        mPresenter.getContactList();
     }
 
     @Override
