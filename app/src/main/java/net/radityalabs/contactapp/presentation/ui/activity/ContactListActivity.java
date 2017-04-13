@@ -13,15 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import net.radityalabs.contactapp.R;
-import net.radityalabs.contactapp.presentation.presenter.EmptyPresenter;
-import net.radityalabs.contactapp.presentation.presenter.contract.EmptyContract;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactListFragment;
 
 import butterknife.BindView;
 
-public class ContactListActivity extends BaseActivity<EmptyPresenter> implements
-        EmptyContract.View,
-        NavigationView.OnNavigationItemSelectedListener,
+public class ContactListActivity extends SimpleBaseActivity implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener {
 
     @BindView(R.id.fab)
@@ -58,11 +54,6 @@ public class ContactListActivity extends BaseActivity<EmptyPresenter> implements
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-    }
-
-    @Override
-    protected void setupInjection() {
-        getActivityComponent().inject(this);
     }
 
     @Override
@@ -112,11 +103,6 @@ public class ContactListActivity extends BaseActivity<EmptyPresenter> implements
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void showError(String msg) {
-
     }
 
     @Override
