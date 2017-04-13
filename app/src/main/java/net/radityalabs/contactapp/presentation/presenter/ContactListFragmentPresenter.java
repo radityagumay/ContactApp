@@ -33,7 +33,7 @@ public class ContactListFragmentPresenter extends RxPresenter<ContactListFragmen
     public void getContactList() {
         mView.showProgressDialog();
         Disposable disposable =
-                useCase.loadContactApi().subscribe(new Consumer<List<ContactListResponse>>() {
+                useCase.getContactList().subscribe(new Consumer<List<ContactListResponse>>() {
                     @Override
                     public void accept(List<ContactListResponse> responses) throws Exception {
                         Log.d(TAG, "Success fetch contact list: " + responses.size());

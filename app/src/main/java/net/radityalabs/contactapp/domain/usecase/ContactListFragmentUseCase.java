@@ -42,53 +42,24 @@ public class ContactListFragmentUseCase {
         return Flowable.zip(loadContactApi(), loadContactDb(), new BiFunction<List<ContactListResponse>, List<ContactListResponse>, List<ContactListResponse>>() {
             @Override
             public List<ContactListResponse> apply(List<ContactListResponse> responseApi, List<ContactListResponse> responseDb) throws Exception {
-                List<ContactListResponse> merge = CollectionUtil.join(responseApi, responseDb);
-                return merge;
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-
-
-                /*.subscribe(new Consumer<List<ContactListResponse>>() {
+                List<ContactListResponse> list = CollectionUtil.join(responseApi, responseDb);
+                Collections.sort(list, new Comparator<ContactListResponse>() {
                     @Override
-                    public void accept(List<ContactListResponse> response) throws Exception {
-                        mView.hideProgressDialog();
-                        mView.showContactList(response);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e(TAG, throwable.getMessage(), throwable);
-                        mView.hideProgressDialog();
-                        mView.showError(throwable.getMessage());
-                    }
-                });*/
-    }
-
-    public Flowable<List<ContactListResponse>> loadContactApi() {
-        return service.getContactList()
-                .compose(RxUtil.<List<ContactListResponse>>rxNewThread())
-                .map(new Function<List<ContactListResponse>, List<ContactListResponse>>() {
-                    @Override
-                    public List<ContactListResponse> apply(List<ContactListResponse> responses) throws Exception {
-                        List<ContactListResponse> list = new ArrayList<>(responses.size());
-                        for (ContactListResponse obj : responses) {
-                            if (!list.contains(obj)) {
-                                list.add(obj);
-                            }
-                        }
-
-                        Collections.sort(list, new Comparator<ContactListResponse>() {
-                            @Override
-                            public int compare(final ContactListResponse object1, final ContactListResponse object2) {
-                                return object1.firstName.compareTo(object2.firstName);
-                            }
-                        });
-                        return list;
+                    public int compare(final ContactListResponse object1, final ContactListResponse object2) {
+                        return object1.firstName.compareTo(object2.firstName);
                     }
                 });
+                return list;
+            }
+        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Flowable<List<ContactListResponse>> loadContactDb() {
+    private Flowable<List<ContactListResponse>> loadContactApi() {
+        return service.getContactList()
+                .compose(RxUtil.<List<ContactListResponse>>rxNewThread());
+    }
+
+    private Flowable<List<ContactListResponse>> loadContactDb() {
         return Single.create(new SingleOnSubscribe<List<ContactObject>>() {
             @Override
             public void subscribe(SingleEmitter<List<ContactObject>> e) throws Exception {
@@ -97,7 +68,7 @@ public class ContactListFragmentUseCase {
                 if (contacts.size() > 0) {
                     e.onSuccess(contacts);
                 } else {
-                    e.onError(new Throwable("List ContactObject is null"));
+                    e.onSuccess(new ArrayList<ContactObject>());
                 }
                 realm.close();
             }
@@ -119,17 +90,6 @@ public class ContactListFragmentUseCase {
                         return response;
                     }
                 }).toFlowable();
-
-                /*.flatMapCompletable(new Function<List<ContactListResponse>, Completable>() {
-                    @Override
-                    public Completable apply(List<ContactListResponse> response) throws Exception {
-                        if (response.size() > 0) {
-                            mView.hideProgressDialog();
-                            mView.showContactList(response);
-                        }
-                        return null;
-                    }
-                }).toFlowable();*/
     }
 
     public Flowable<List<ContactListResponse>> insertContactToDb(final List<ContactListResponse> responses) {
