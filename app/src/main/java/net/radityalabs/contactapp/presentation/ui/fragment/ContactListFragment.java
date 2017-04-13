@@ -45,7 +45,7 @@ public class ContactListFragment extends BaseFragment<ContactListFragmentPresent
     }
 
     public ContactListFragment() {
-
+        // TODO
     }
 
     @Override
@@ -77,6 +77,17 @@ public class ContactListFragment extends BaseFragment<ContactListFragmentPresent
     public void showContactList(List<ContactListResponse> response) {
         mContactList.addAll(response);
         mContactListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showContactListRange(List<ContactListResponse> responses) {
+        if (mContactList.size() > 0) {
+            mContactList.addAll(responses);
+            mContactListAdapter.notifyItemRangeChanged(mContactList.size() - 1, responses.size() - mContactList.size());
+        } else {
+            mContactList.addAll(responses);
+            mContactListAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

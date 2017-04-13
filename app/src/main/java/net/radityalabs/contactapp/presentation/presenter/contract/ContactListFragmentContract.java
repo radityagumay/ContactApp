@@ -14,6 +14,7 @@ public interface ContactListFragmentContract {
 
     interface View extends BaseView {
         void showContactList(List<ContactListResponse> response);
+        void showContactListRange(List<ContactListResponse> responses);
         void showProgressDialog();
         void hideProgressDialog();
     }

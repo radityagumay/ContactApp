@@ -32,19 +32,20 @@ public class ContactListFragmentPresenter extends RxPresenter<ContactListFragmen
     @Override
     public void getContactList() {
         mView.showProgressDialog();
-        Disposable disposable =
-                useCase.getContactList().subscribe(new Consumer<List<ContactListResponse>>() {
+        Disposable disposable = useCase.getContactListDb()
+                .subscribe(new Consumer<List<ContactListResponse>>() {
                     @Override
                     public void accept(List<ContactListResponse> responses) throws Exception {
-                        Log.d(TAG, "Success fetch contact list: " + responses.size());
+                        Log.d(TAG, "Success fetch contact list from db: " + responses.size());
 
-                        mView.hideProgressDialog();
                         mView.showContactList(responses);
+                        /* fetch new one */
+                        fetch();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Log.e(TAG, "Failed fetch contact list: " + throwable.getMessage());
+                        Log.e(TAG, "Failed fetch contact list from db: " + throwable.getMessage());
 
                         mView.hideProgressDialog();
                         mView.showError(throwable.getMessage());
@@ -58,17 +59,23 @@ public class ContactListFragmentPresenter extends RxPresenter<ContactListFragmen
         dispose();
     }
 
-    private void insertContact(final List<ContactListResponse> responses) {
-        Disposable disposable = useCase.insertContactToDb(responses)
+    private void fetch() {
+        Disposable disposable = useCase.getContactListApi()
                 .subscribe(new Consumer<List<ContactListResponse>>() {
                     @Override
                     public void accept(List<ContactListResponse> responses) throws Exception {
+                        Log.d(TAG, "Success fetch contact list from api: " + responses.size());
 
+                        mView.hideProgressDialog();
+                        mView.showContactListRange(responses);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Log.e(TAG, "Failed fetch contact list from api: " + throwable.getMessage());
 
+                        mView.hideProgressDialog();
+                        mView.showError(throwable.getMessage());
                     }
                 });
         addDisposable(disposable);
