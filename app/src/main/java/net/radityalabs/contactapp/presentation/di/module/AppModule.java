@@ -4,6 +4,8 @@ import net.radityalabs.contactapp.ContactApp;
 import net.radityalabs.contactapp.data.network.RestService;
 import net.radityalabs.contactapp.data.network.RetrofitHelper;
 import net.radityalabs.contactapp.data.realm.RealmHelper;
+import net.radityalabs.contactapp.domain.usecase.ContactListFragmentUseCase;
+import net.radityalabs.contactapp.presentation.di.scope.FragmentScope;
 
 import javax.inject.Singleton;
 
@@ -38,5 +40,11 @@ public class AppModule {
     @Singleton
     RealmHelper provideRealmHelper() {
         return new RealmHelper();
+    }
+
+    @Provides
+    @Singleton
+    ContactListFragmentUseCase provideContactListFragmentUseCase(RestService restService) {
+        return new ContactListFragmentUseCase(provideRetrofitHelper(restService), provideRealmHelper());
     }
 }

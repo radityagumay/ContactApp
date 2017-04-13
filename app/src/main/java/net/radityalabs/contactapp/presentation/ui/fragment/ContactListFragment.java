@@ -1,15 +1,16 @@
 package net.radityalabs.contactapp.presentation.ui.fragment;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.presentation.factory.DialogFactory;
+import net.radityalabs.contactapp.presentation.factory.SnackbarFactory;
 import net.radityalabs.contactapp.presentation.presenter.ContactListFragmentPresenter;
 import net.radityalabs.contactapp.presentation.presenter.contract.ContactListFragmentContract;
 import net.radityalabs.contactapp.presentation.ui.adapter.ContactListAdapter;
+import net.radityalabs.contactapp.presentation.util.RecycleViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class ContactListFragment extends BaseFragment<ContactListFragmentPresent
 
     @Override
     public void showError(String msg) {
-
+        SnackbarFactory.show(mView, msg);
     }
 
     @Override
@@ -95,14 +96,7 @@ public class ContactListFragment extends BaseFragment<ContactListFragmentPresent
 
     private void setupRecycleView() {
         rvContact.setHasFixedSize(true);
-        rvContact.setLayoutManager(layoutManagerBuilder());
+        rvContact.setLayoutManager(RecycleViewUtil.linearLayoutManager(mContext));
         rvContact.setAdapter(mContactListAdapter);
-    }
-
-    private LinearLayoutManager layoutManagerBuilder() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
-        linearLayoutManager.setReverseLayout(false);
-        linearLayoutManager.setStackFromEnd(true);
-        return linearLayoutManager;
     }
 }
