@@ -3,6 +3,7 @@ package net.radityalabs.contactapp.presentation.di.module;
 import net.radityalabs.contactapp.ContactApp;
 import net.radityalabs.contactapp.data.network.RestService;
 import net.radityalabs.contactapp.data.network.RetrofitHelper;
+import net.radityalabs.contactapp.data.realm.RealmHelper;
 
 import javax.inject.Singleton;
 
@@ -31,5 +32,11 @@ public class AppModule {
     @Singleton
     RetrofitHelper provideRetrofitHelper(RestService restService) {
         return new RetrofitHelper(restService);
+    }
+
+    @Provides
+    @Singleton
+    RealmHelper provideRealmHelper() {
+        return new RealmHelper();
     }
 }

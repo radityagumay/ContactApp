@@ -2,6 +2,7 @@ package net.radityalabs.contactapp.presentation.di.component;
 
 import net.radityalabs.contactapp.ContactApp;
 import net.radityalabs.contactapp.data.network.RetrofitHelper;
+import net.radityalabs.contactapp.data.realm.RealmHelper;
 import net.radityalabs.contactapp.presentation.di.module.AppModule;
 import net.radityalabs.contactapp.presentation.di.module.HttpModule;
 
@@ -20,4 +21,6 @@ public interface AppComponent {
     ContactApp getContext();
 
     RetrofitHelper retrofitHelper();
+
+    RealmHelper realmHelper();
 }

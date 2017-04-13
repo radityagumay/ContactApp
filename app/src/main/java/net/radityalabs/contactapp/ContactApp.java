@@ -11,6 +11,8 @@ import net.radityalabs.contactapp.presentation.di.module.HttpModule;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.realm.Realm;
+
 /**
  * Created by radityagumay on 4/11/17.
  */
@@ -30,6 +32,12 @@ public class ContactApp extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+
+        setupRealm();
+    }
+
+    private void setupRealm() {
+        Realm.init(this);
     }
 
     public static AppComponent getAppComponent() {
