@@ -8,6 +8,7 @@ import net.radityalabs.contactapp.data.network.RetrofitHelper;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.data.realm.RealmHelper;
 import net.radityalabs.contactapp.data.realm.table.ContactObject;
+import net.radityalabs.contactapp.presentation.factory.DialogFactory;
 import net.radityalabs.contactapp.presentation.rx.RxUtil;
 
 import java.util.ArrayList;
@@ -20,11 +21,13 @@ import io.reactivex.SingleOnSubscribe;
 import io.reactivex.SingleSource;
 import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.Sort;
 
 /**
  * Created by radityagumay on 4/13/17.
@@ -44,9 +47,41 @@ public class ContactListFragmentUseCase {
         this.context = context;
     }
 
+    public Flowable<List<ContactListResponse>> getContactList() {
+        return Single.create(new SingleOnSubscribe<List<ContactObject>>() {
+            @Override
+            public void subscribe(SingleEmitter<List<ContactObject>> emmit) throws Exception {
+                Realm realm = Realm.getInstance(realmHelper.buildRealmConfiguration());
+
+                String[] fieldNames = {ContactObject.FIRST_NAME};
+                Sort[] sort = {Sort.ASCENDING};
+                List<ContactObject> contacts = realm.copyFromRealm(
+                        realm.where(ContactObject.class).findAllSorted(fieldNames, sort));
+                emmit.onSuccess(contacts.size() > 0 ? contacts : new ArrayList<ContactObject>());
+                realm.close();
+            }
+        }).compose(RxUtil.<List<ContactObject>>singleIo()).map(new Function<List<ContactObject>, List<ContactListResponse>>() {
+            @Override
+            public List<ContactListResponse> apply(List<ContactObject> contacts) throws Exception {
+                List<ContactListResponse> response = new ArrayList<>(contacts.size());
+                for (int i = 0; i < contacts.size(); i++) {
+                    ContactListResponse obj = new ContactListResponse();
+                    obj.id = (int) contacts.get(i).id;
+                    obj.firstName = contacts.get(i).firstName;
+                    obj.lastName = contacts.get(i).lastName;
+                    obj.profilePic = contacts.get(i).profilePic;
+                    obj.isFavorite = contacts.get(i).isFavorite;
+                    obj.detailUrl = contacts.get(i).detailUrl;
+                    response.add(obj);
+                }
+                return response;
+            }
+        }).toFlowable();
+    }
+
     public Flowable<List<ContactListResponse>> getContactListApi() {
         return service.getContactList()
-                .compose(RxUtil.<List<ContactListResponse>>single())
+                .compose(RxUtil.<List<ContactListResponse>>singleNewThread())
                 .compose(new SingleTransformer<List<ContactListResponse>, List<ContactListResponse>>() {
                     @Override
                     public SingleSource<List<ContactListResponse>> apply(Single<List<ContactListResponse>> upstream) {
@@ -55,36 +90,17 @@ public class ContactListFragmentUseCase {
                             public void accept(List<ContactListResponse> responses) throws Exception {
                                 insertContact(responses);
                             }
+                        }).doOnError(new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                DialogFactory.showAlertDialog(context);
+                            }
+                        }).doFinally(new Action() {
+                            @Override
+                            public void run() throws Exception {
+                                DialogFactory.dismissAlertDialog();
+                            }
                         });
-                    }
-                }).toFlowable();
-    }
-
-    public Flowable<List<ContactListResponse>> getContactListDb() {
-        return Single.create(new SingleOnSubscribe<List<ContactObject>>() {
-            @Override
-            public void subscribe(SingleEmitter<List<ContactObject>> emmit) throws Exception {
-                Realm realm = Realm.getInstance(realmHelper.buildRealmConfiguration());
-                List<ContactObject> contacts = realm.copyFromRealm(realm.where(ContactObject.class).findAll());
-                emmit.onSuccess(contacts.size() > 0 ? contacts : new ArrayList<ContactObject>());
-                realm.close();
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<List<ContactObject>, List<ContactListResponse>>() {
-                    @Override
-                    public List<ContactListResponse> apply(List<ContactObject> contacts) throws Exception {
-                        List<ContactListResponse> response = new ArrayList<>(contacts.size());
-                        for (int i = 0; i < contacts.size(); i++) {
-                            ContactListResponse obj = new ContactListResponse();
-                            obj.id = (int) contacts.get(i).id;
-                            obj.firstName = contacts.get(i).firstName;
-                            obj.lastName = contacts.get(i).lastName;
-                            obj.profilePic = contacts.get(i).profilePic;
-                            obj.isFavorite = contacts.get(i).isFavorite;
-                            obj.detailUrl = contacts.get(i).detailUrl;
-                            response.add(obj);
-                        }
-                        return response;
                     }
                 }).toFlowable();
     }

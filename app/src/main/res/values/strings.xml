@@ -5,4 +5,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- dialog / toast factory -->
+    <string name="please_wait">Please wait</string>
+    <string name="network_error">Network Error</string>
+    <string name="unable_to_contact_the_server">Unable to contact the server</string>
+    <string name="no_contacts_found">No Contacts Found</string>
+
 </resources>

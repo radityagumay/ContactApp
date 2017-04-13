@@ -1,5 +1,6 @@
-package net.radityalabs.contactapp.presentation.presenter;
+package net.radityalabs.contactapp.presentation.rx;
 
+import net.radityalabs.contactapp.presentation.presenter.BasePresenter;
 import net.radityalabs.contactapp.presentation.rx.RxBus;
 import net.radityalabs.contactapp.presentation.view.BaseView;
 

@@ -1,6 +1,8 @@
 package net.radityalabs.contactapp.data.realm.table;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -9,11 +11,18 @@ import io.realm.annotations.PrimaryKey;
 
 public class ContactObject extends RealmObject {
 
+    @Ignore
+    public static final String FIRST_NAME = "firstName";
+    @Ignore
+    public static final String IS_FAVORITE = "isFavorite";
+
     @PrimaryKey
     public long id;
+    @Index
     public String firstName;
     public String lastName;
     public String profilePic;
+    @Index
     public boolean isFavorite;
     public String detailUrl;
 }

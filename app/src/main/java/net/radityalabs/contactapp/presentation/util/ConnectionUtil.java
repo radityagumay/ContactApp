@@ -14,20 +14,30 @@ public class ConnectionUtil {
 
     public static boolean isWifiConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) ContactApp.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiInfo = connectivityManager
-                .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        return wifiInfo != null;
+        NetworkInfo.State wifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+        return wifi == NetworkInfo.State.CONNECTED;
     }
 
     public static boolean isMobileNetworkConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) ContactApp.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mobileNetworkInfo = connectivityManager
-                .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        return mobileNetworkInfo != null;
+        NetworkInfo.State mobile = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+        return mobile == NetworkInfo.State.CONNECTED;
     }
 
     public static boolean isNetworkConnected() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) ContactApp.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getActiveNetworkInfo() != null;
+        boolean netstate = false;
+        ConnectivityManager connectivity = (ConnectivityManager) ContactApp.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null) {
+                for (NetworkInfo anInfo : info) {
+                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
+                        netstate = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return netstate;
     }
 }

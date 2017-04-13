@@ -1,5 +1,6 @@
 package net.radityalabs.contactapp.presentation.factory;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -17,10 +18,11 @@ import net.radityalabs.contactapp.R;
 public class DialogFactory {
 
     private static ProgressDialog mProgressDialog;
+    private static AlertDialog mAlertDialog;
 
     public static void showNotCancelableProgress(Context context) {
         mProgressDialog = new ProgressDialog(context);
-        mProgressDialog.setMessage("Menunggu");
+        mProgressDialog.setMessage(context.getResources().getString(R.string.please_wait));
         mProgressDialog.setCancelable(false);
         mProgressDialog.setIndeterminate(true);
 
@@ -36,6 +38,20 @@ public class DialogFactory {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
             mProgressDialog = null;
+        }
+    }
+
+    public static void showAlertDialog(Context context) {
+        mAlertDialog = new AlertDialog.Builder(context)
+                .setTitle(context.getResources().getString(R.string.network_error))
+                .setMessage(context.getResources().getString(R.string.unable_to_contact_the_server))
+                .show();
+    }
+
+    public static void dismissAlertDialog() {
+        if (mAlertDialog != null && mAlertDialog.isShowing()) {
+            mAlertDialog.dismiss();
+            mAlertDialog = null;
         }
     }
 }

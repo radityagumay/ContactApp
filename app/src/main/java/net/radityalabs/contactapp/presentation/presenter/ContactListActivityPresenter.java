@@ -1,6 +1,7 @@
 package net.radityalabs.contactapp.presentation.presenter;
 
 import net.radityalabs.contactapp.presentation.presenter.contract.ContactListActivityContract;
+import net.radityalabs.contactapp.presentation.rx.RxPresenter;
 
 import javax.inject.Inject;
 

@@ -4,7 +4,17 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="horizontal"
-              android:padding="10dp">
+              android:padding="16px">
+
+    <ImageView
+        android:id="@+id/iv_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16px"
+        android:layout_marginRight="32px"
+        android:src="@mipmap/ic_star"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/tv_first_char"

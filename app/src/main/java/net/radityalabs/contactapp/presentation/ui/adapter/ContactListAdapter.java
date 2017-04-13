@@ -39,6 +39,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListViewHold
             ContactListResponse item = mContactList.get(position);
             holder.tvFirstChar.setText(StringUtil.getFirstChar(item.firstName));
             holder.tvFullName.setText(StringUtil.mergeString(item.firstName, item.lastName));
+            holder.ivFavorite.setVisibility(View.VISIBLE);
         }
     }
 

@@ -1,16 +1,27 @@
 package net.radityalabs.contactapp.presentation.presenter;
 
+import android.content.Context;
 import android.util.Log;
 
+import net.radityalabs.contactapp.ContactApp;
+import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.domain.usecase.ContactListFragmentUseCase;
 import net.radityalabs.contactapp.presentation.presenter.contract.ContactListFragmentContract;
+import net.radityalabs.contactapp.presentation.rx.RxPresenter;
+import net.radityalabs.contactapp.presentation.util.ConnectionUtil;
+
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscription;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
+import io.reactivex.FlowableTransformer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -22,25 +33,37 @@ public class ContactListFragmentPresenter extends RxPresenter<ContactListFragmen
 
     private static final String TAG = ContactListFragmentPresenter.class.getSimpleName();
 
+    private Context mContext;
     private ContactListFragmentUseCase useCase;
 
     @Inject
-    public ContactListFragmentPresenter(ContactListFragmentUseCase useCase) {
+    public ContactListFragmentPresenter(ContactListFragmentUseCase useCase, ContactApp context) {
         this.useCase = useCase;
+        this.mContext = context.getApplicationContext();
     }
 
     @Override
     public void getContactList() {
         mView.showProgressDialog();
-        Disposable disposable = useCase.getContactListDb()
-                .subscribe(new Consumer<List<ContactListResponse>>() {
+        Disposable disposable = useCase.getContactList()
+                .compose(new FlowableTransformer<List<ContactListResponse>, List<ContactListResponse>>() {
+                    @Override
+                    public Publisher<List<ContactListResponse>> apply(Flowable<List<ContactListResponse>> upstream) {
+                        return upstream.doOnComplete(new Action() {
+                            @Override
+                            public void run() throws Exception {
+                                /* fetch new one */
+                                fetch();
+                            }
+                        });
+                    }
+                }).subscribe(new Consumer<List<ContactListResponse>>() {
                     @Override
                     public void accept(List<ContactListResponse> responses) throws Exception {
                         Log.d(TAG, "Success fetch contact list from db: " + responses.size());
 
+                        mView.hideProgressDialog();
                         mView.showContactList(responses);
-                        /* fetch new one */
-                        fetch();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -61,20 +84,33 @@ public class ContactListFragmentPresenter extends RxPresenter<ContactListFragmen
 
     private void fetch() {
         Disposable disposable = useCase.getContactListApi()
-                .subscribe(new Consumer<List<ContactListResponse>>() {
+                .compose(new FlowableTransformer<List<ContactListResponse>, List<ContactListResponse>>() {
+                    @Override
+                    public Publisher<List<ContactListResponse>> apply(Flowable<List<ContactListResponse>> upstream) {
+                        return upstream.doOnSubscribe(new Consumer<Subscription>() {
+                            @Override
+                            public void accept(Subscription subscription) throws Exception {
+                                if (!ConnectionUtil.isNetworkConnected()) {
+                                    mView.showError("No Internet Connection");
+                                }
+                            }
+                        });
+                    }
+                }).subscribe(new Consumer<List<ContactListResponse>>() {
                     @Override
                     public void accept(List<ContactListResponse> responses) throws Exception {
                         Log.d(TAG, "Success fetch contact list from api: " + responses.size());
-
-                        mView.hideProgressDialog();
-                        mView.showContactListRange(responses);
+                        if (responses.size() > 0) {
+                            mView.showContactListRange(responses);
+                        } else {
+                            mView.showError(mContext.getResources().getString(R.string.no_contacts_found));
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Log.e(TAG, "Failed fetch contact list from api: " + throwable.getMessage());
 
-                        mView.hideProgressDialog();
                         mView.showError(throwable.getMessage());
                     }
                 });

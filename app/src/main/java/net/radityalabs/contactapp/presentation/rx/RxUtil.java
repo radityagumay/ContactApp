@@ -17,6 +17,7 @@ import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -60,7 +61,7 @@ public class RxUtil {
         };
     }
 
-    public static <T> FlowableTransformer<T, T> flowable() {
+    public static <T> FlowableTransformer<T, T> flowableNewThread() {
         return new FlowableTransformer<T, T>() {
             @Override
             public Publisher<T> apply(Flowable<T> upstream) {
@@ -70,12 +71,36 @@ public class RxUtil {
         };
     }
 
-    public static <T> SingleTransformer<T, T> single() {
+    public static <T> SingleTransformer<T, T> singleIo() {
+        return new SingleTransformer<T, T>() {
+            @Override
+            public SingleSource<T> apply(Single<T> upstream) {
+                return upstream.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread());
+            }
+        };
+    }
+
+    public static <T> SingleTransformer<T, T> singleNewThread() {
         return new SingleTransformer<T, T>() {
             @Override
             public SingleSource<T> apply(Single<T> upstream) {
                 return upstream.subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread());
+            }
+        };
+    }
+
+    public static <T> SingleTransformer<T, T> singleDoOnSubscribe(final Context context) {
+        return new SingleTransformer<T, T>() {
+            @Override
+            public SingleSource<T> apply(Single<T> upstream) {
+                return upstream.doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        ToastFactory.show(context, "No Internet Connection");
+                    }
+                });
             }
         };
     }

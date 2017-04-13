@@ -92,7 +92,9 @@ public class ContactListFragment extends BaseFragment<ContactListFragmentPresent
 
     @Override
     public void showError(String msg) {
-        SnackbarFactory.show(mView, msg);
+        if (!(mContactList.size() > 0)) {
+            SnackbarFactory.show(mView, msg);
+        }
     }
 
     @Override
