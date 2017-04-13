@@ -33,6 +33,6 @@ public class RxBus {
     }
 
     public <T> Disposable toDefaultObservable(Class<T> eventType, Consumer<T> act) {
-        return bus.ofType(eventType).compose(RxUtil.<T>rxNewThread()).subscribe(act);
+        return bus.ofType(eventType).compose(RxUtil.<T>flowable()).subscribe(act);
     }
 }

@@ -5,6 +5,7 @@ import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import retrofit2.http.GET;
 
 /**
@@ -14,5 +15,5 @@ import retrofit2.http.GET;
 public interface RestService {
 
     @GET(ApiConstant.GET_CONTACT_LIST)
-    Flowable<List<ContactListResponse>> getContactList();
+    Single<List<ContactListResponse>> getContactList();
 }

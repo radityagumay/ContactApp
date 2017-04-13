@@ -1,5 +1,7 @@
 package net.radityalabs.contactapp.domain.usecase;
 
+import android.content.Context;
+
 import net.radityalabs.contactapp.data.network.RestService;
 import net.radityalabs.contactapp.data.network.RetrofitHelper;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
@@ -32,10 +34,12 @@ public class ContactListFragmentUseCase {
 
     private RealmHelper realmHelper;
     private RestService service;
+    private Context context;
 
-    public ContactListFragmentUseCase(RetrofitHelper retrofitHelper, RealmHelper realmHelper) {
+    public ContactListFragmentUseCase(RetrofitHelper retrofitHelper, RealmHelper realmHelper, Context context) {
         this.service = retrofitHelper.getRestService();
         this.realmHelper = realmHelper;
+        this.context = context;
     }
 
     public Flowable<List<ContactListResponse>> getContactList() {
@@ -51,12 +55,14 @@ public class ContactListFragmentUseCase {
                 });
                 return list;
             }
-        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
+                .compose(RxUtil.<List<ContactListResponse>>showToast(context, "Something happen"));
     }
 
     private Flowable<List<ContactListResponse>> loadContactApi() {
         return service.getContactList()
-                .compose(RxUtil.<List<ContactListResponse>>rxNewThread());
+                .compose(RxUtil.<List<ContactListResponse>>single())
+                .toFlowable();
     }
 
     private Flowable<List<ContactListResponse>> loadContactDb() {
@@ -117,11 +123,6 @@ public class ContactListFragmentUseCase {
                     }
                 });
                 realm.close();
-            }
-        }).map(new Function<List<ContactListResponse>, List<ContactListResponse>>() {
-            @Override
-            public List<ContactListResponse> apply(List<ContactListResponse> responses) throws Exception {
-                return null;
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .toFlowable();

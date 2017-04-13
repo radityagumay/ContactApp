@@ -45,6 +45,6 @@ public class AppModule {
     @Provides
     @Singleton
     ContactListFragmentUseCase provideContactListFragmentUseCase(RestService restService) {
-        return new ContactListFragmentUseCase(provideRetrofitHelper(restService), provideRealmHelper());
+        return new ContactListFragmentUseCase(provideRetrofitHelper(restService), provideRealmHelper(), application.getApplicationContext());
     }
 }
