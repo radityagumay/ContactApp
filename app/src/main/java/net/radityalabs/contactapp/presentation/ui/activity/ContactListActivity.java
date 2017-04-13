@@ -13,14 +13,14 @@ import android.view.MenuItem;
 import android.view.View;
 
 import net.radityalabs.contactapp.R;
-import net.radityalabs.contactapp.presentation.presenter.ContactListActivityPresenter;
-import net.radityalabs.contactapp.presentation.presenter.contract.ContactListActivityContract;
+import net.radityalabs.contactapp.presentation.presenter.EmptyPresenter;
+import net.radityalabs.contactapp.presentation.presenter.contract.EmptyContract;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactListFragment;
 
 import butterknife.BindView;
 
-public class ContactListActivity extends BaseActivity<ContactListActivityPresenter> implements
-        ContactListActivityContract.View,
+public class ContactListActivity extends BaseActivity<EmptyPresenter> implements
+        EmptyContract.View,
         NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener {
 

@@ -7,7 +7,7 @@ import net.radityalabs.contactapp.presentation.view.BaseView;
  * Created by radityagumay on 4/12/17.
  */
 
-public interface ContactListActivityContract {
+public interface EmptyContract {
 
     interface View extends BaseView {
 
