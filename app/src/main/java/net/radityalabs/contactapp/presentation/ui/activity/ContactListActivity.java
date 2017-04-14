@@ -46,7 +46,7 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
     }
 
     private void setupToolbar() {
-        setToolBar(toolbar, "ContactApp");
+        setupToolBar(toolbar, "ContactApp");
         setupDrawer(toolbar);
     }
 

@@ -4,6 +4,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="action_edit">Edit</string>
+    <string name="action_favorite">Favorite</string>
     <string name="action_settings">Settings</string>
 
     <!-- dialog / toast factory -->

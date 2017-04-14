@@ -51,9 +51,10 @@ public abstract class SimpleBaseActivity extends AppCompatActivity {
         ContactApp.getInstance().removeActivity(this);
     }
 
-    protected void setToolBar(@NonNull Toolbar toolbar, String title) {
+    protected void setupToolBar(@NonNull Toolbar toolbar, String title) {
         toolbar.setTitle(title);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(title != null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
