@@ -65,15 +65,15 @@ public abstract class SimpleBaseActivity extends AppCompatActivity {
     }
 
     private void onBackPressedSupport() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            super.onBackPressed();
-        } else {
-            finish();
-        }
+        finish();
     }
 
-    protected void replaceFragment(@IdRes int containerViewId, @NonNull Fragment fragment, @NonNull String fragmentTag, @Nullable String backStackStateName) {
+    protected void replaceFragment(@IdRes int containerViewId, @NonNull Fragment fragment, String fragmentTag, String backStackStateName) {
         getSupportFragmentManager().beginTransaction().replace(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
+    }
+
+    protected void addFragment(@IdRes int containerViewId, @NonNull Fragment fragment, String fragmentTag, String backStackStateName) {
+        getSupportFragmentManager().beginTransaction().add(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
     }
 
     protected abstract void setupEventAndData();

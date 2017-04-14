@@ -58,7 +58,7 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
 
     @Override
     protected void setupEventAndData() {
-        replaceFragment(R.id.container, ContactListFragment.newInstance("", ""), ContactListFragment.TAG, ContactListFragment.TAG);
+        addFragment(R.id.container, ContactListFragment.newInstance("", ""), ContactListFragment.TAG, ContactListFragment.TAG);
     }
 
     @Override

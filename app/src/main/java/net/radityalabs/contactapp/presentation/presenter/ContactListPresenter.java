@@ -6,8 +6,8 @@ import android.util.Log;
 import net.radityalabs.contactapp.ContactApp;
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
-import net.radityalabs.contactapp.domain.usecase.ContactListFragmentUseCase;
-import net.radityalabs.contactapp.presentation.presenter.contract.ContactListFragmentContract;
+import net.radityalabs.contactapp.domain.usecase.ContactListUseCase;
+import net.radityalabs.contactapp.presentation.presenter.contract.ContactListContract;
 import net.radityalabs.contactapp.presentation.rx.RxPresenter;
 import net.radityalabs.contactapp.presentation.util.ConnectionUtil;
 
@@ -28,16 +28,16 @@ import io.reactivex.functions.Consumer;
  * Created by radityagumay on 4/12/17.
  */
 
-public class ContactListFragmentPresenter extends RxPresenter<ContactListFragmentContract.View> implements
-        ContactListFragmentContract.Presenter {
+public class ContactListPresenter extends RxPresenter<ContactListContract.View> implements
+        ContactListContract.Presenter {
 
-    private static final String TAG = ContactListFragmentPresenter.class.getSimpleName();
+    private static final String TAG = ContactListPresenter.class.getSimpleName();
 
     private Context mContext;
-    private ContactListFragmentUseCase useCase;
+    private ContactListUseCase useCase;
 
     @Inject
-    public ContactListFragmentPresenter(ContactListFragmentUseCase useCase, ContactApp context) {
+    public ContactListPresenter(ContactListUseCase useCase, ContactApp context) {
         this.useCase = useCase;
         this.mContext = context.getApplicationContext();
     }

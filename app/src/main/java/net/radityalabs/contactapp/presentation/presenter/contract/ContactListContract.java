@@ -10,7 +10,7 @@ import java.util.List;
  * Created by radityagumay on 4/12/17.
  */
 
-public interface ContactListFragmentContract {
+public interface ContactListContract {
 
     interface View extends BaseView {
         void showContactList(List<ContactListResponse> response);

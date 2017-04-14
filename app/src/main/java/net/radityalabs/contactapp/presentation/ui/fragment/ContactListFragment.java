@@ -2,15 +2,18 @@ package net.radityalabs.contactapp.presentation.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.presentation.factory.DialogFactory;
 import net.radityalabs.contactapp.presentation.factory.SnackbarFactory;
-import net.radityalabs.contactapp.presentation.presenter.ContactListFragmentPresenter;
-import net.radityalabs.contactapp.presentation.presenter.contract.ContactListFragmentContract;
+import net.radityalabs.contactapp.presentation.presenter.ContactListPresenter;
+import net.radityalabs.contactapp.presentation.presenter.contract.ContactListContract;
+import net.radityalabs.contactapp.presentation.ui.activity.ContactDetailActivity;
 import net.radityalabs.contactapp.presentation.ui.adapter.ContactListAdapter;
 import net.radityalabs.contactapp.presentation.util.RecycleViewUtil;
+import net.radityalabs.contactapp.presentation.widget.OnSimpleClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +24,8 @@ import butterknife.BindView;
  * Created by radityagumay on 4/11/17.
  */
 
-public class ContactListFragment extends BaseFragment<ContactListFragmentPresenter> implements
-        ContactListFragmentContract.View {
+public class ContactListFragment extends BaseFragment<ContactListPresenter> implements
+        ContactListContract.View, OnSimpleClickListener {
 
     public static final String TAG = ContactListFragment.class.getSimpleName();
 
@@ -56,7 +59,7 @@ public class ContactListFragment extends BaseFragment<ContactListFragmentPresent
     @Override
     protected void setupEventAndData() {
         mContactList = new ArrayList<>();
-        mContactListAdapter = new ContactListAdapter(mContext, mContactList);
+        mContactListAdapter = new ContactListAdapter(mContext, mContactList, this);
 
         setupRecycleView();
 
@@ -105,6 +108,11 @@ public class ContactListFragment extends BaseFragment<ContactListFragmentPresent
     @Override
     public void hideProgressDialog() {
         DialogFactory.dismissProgress();
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        ContactDetailActivity.navigate(mActivity);
     }
 
     private void setupRecycleView() {

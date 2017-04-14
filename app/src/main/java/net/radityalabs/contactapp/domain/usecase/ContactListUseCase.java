@@ -33,15 +33,15 @@ import io.realm.Sort;
  * Created by radityagumay on 4/13/17.
  */
 
-public class ContactListFragmentUseCase {
+public class ContactListUseCase {
 
-    private static final String TAG = ContactListFragmentUseCase.class.getSimpleName();
+    private static final String TAG = ContactListUseCase.class.getSimpleName();
 
     private RealmHelper realmHelper;
     private RestService service;
     private Context context;
 
-    public ContactListFragmentUseCase(RetrofitHelper retrofitHelper, RealmHelper realmHelper, Context context) {
+    public ContactListUseCase(RetrofitHelper retrofitHelper, RealmHelper realmHelper, Context context) {
         this.service = retrofitHelper.getRestService();
         this.realmHelper = realmHelper;
         this.context = context;

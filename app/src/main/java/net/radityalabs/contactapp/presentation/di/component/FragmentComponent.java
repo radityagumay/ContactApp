@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import net.radityalabs.contactapp.presentation.di.module.FragmentModule;
 import net.radityalabs.contactapp.presentation.di.scope.FragmentScope;
+import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactListFragment;
 
 import dagger.Component;
@@ -19,4 +20,6 @@ public interface FragmentComponent {
     Activity getActivity();
 
     void inject(ContactListFragment contactListFragment);
+
+    void inject(ContactDetailFragment contactDetailFragment);
 }
