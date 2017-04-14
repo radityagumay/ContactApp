@@ -123,11 +123,12 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment imp
     }
 
     protected void setupToolbar(Toolbar toolbar, String title) {
+        boolean isVisible = title != null;
         ((AppCompatActivity) mContext).setSupportActionBar(toolbar);
         ((AppCompatActivity) mContext).getSupportActionBar().setTitle(title);
-        ((AppCompatActivity) mContext).getSupportActionBar().setDisplayShowTitleEnabled(title != null);
-        ((AppCompatActivity) mContext).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) mContext).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity) mContext).getSupportActionBar().setDisplayShowTitleEnabled(isVisible);
+        ((AppCompatActivity) mContext).getSupportActionBar().setDisplayHomeAsUpEnabled(isVisible);
+        ((AppCompatActivity) mContext).getSupportActionBar().setDisplayShowHomeEnabled(isVisible);
     }
 
     protected abstract void setupInjection();

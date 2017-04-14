@@ -1,6 +1,7 @@
 package net.radityalabs.contactapp.presentation.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +39,12 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
 
     public ContactDetailFragment() {
         // TODO
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
