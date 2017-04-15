@@ -12,6 +12,8 @@ import io.realm.annotations.PrimaryKey;
 public class ContactObject extends RealmObject {
 
     @Ignore
+    public static final String ID = "id";
+    @Ignore
     public static final String FIRST_NAME = "firstName";
     @Ignore
     public static final String IS_FAVORITE = "isFavorite";
@@ -22,7 +24,10 @@ public class ContactObject extends RealmObject {
     public String firstName;
     public String lastName;
     public String profilePic;
+    public String email;
+    public String phoneNumber;
+    public String detailUrl;
     @Index
     public boolean isFavorite;
-    public String detailUrl;
+    public boolean isCompleted;
 }

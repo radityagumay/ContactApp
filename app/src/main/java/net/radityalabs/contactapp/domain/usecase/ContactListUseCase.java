@@ -119,6 +119,7 @@ public class ContactListUseCase {
                     obj.profilePic = responses.get(i).profilePic;
                     obj.isFavorite = responses.get(i).isFavorite;
                     obj.detailUrl = responses.get(i).detailUrl;
+                    obj.isCompleted = false;
                     contacts.add(obj);
                 }
 

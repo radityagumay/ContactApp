@@ -14,8 +14,12 @@ import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment
 
 public class ContactDetailActivity extends SimpleBaseActivity {
 
-    public static void navigate(Activity activity) {
-        activity.startActivity(new Intent(activity, ContactDetailActivity.class));
+    public static final String EXTRA_USER_ID = "extra_user_id";
+
+    public static void navigate(Activity activity, int userId) {
+        Intent intent = new Intent(activity, ContactDetailActivity.class);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -25,7 +29,7 @@ public class ContactDetailActivity extends SimpleBaseActivity {
 
     @Override
     protected void setupEventAndData() {
-        addFragment(R.id.container, ContactDetailFragment.newInstance("", ""), ContactDetailFragment.TAG, ContactDetailFragment.TAG);
+        addFragment(R.id.container, ContactDetailFragment.newInstance(getIntent().getIntExtra(EXTRA_USER_ID, -1)), ContactDetailFragment.TAG, ContactDetailFragment.TAG);
     }
 
     @Override

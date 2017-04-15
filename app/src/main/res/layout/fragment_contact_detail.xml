@@ -50,10 +50,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|bottom"
                     android:layout_marginBottom="3dp"
-                    android:padding="6dp"
-                    android:text="Raditya Gumay"
+                    android:paddingBottom="@dimen/fragment_contact_detail_full_name_text_view_padding_bottom"
+                    android:paddingEnd="0dp"
+                    android:paddingLeft="@dimen/fragment_contact_detail_full_name_text_view_padding_left"
+                    android:paddingRight="0dp"
+                    android:paddingStart="@dimen/fragment_contact_detail_full_name_text_view_padding_left"
+                    android:text="@string/hint_name"
                     android:textColor="@android:color/white"
-                    android:textSize="12sp"/>
+                    android:textSize="@dimen/fragment_contact_detail_full_name_text_view_text_size"/>
             </FrameLayout>
 
             <android.support.v7.widget.Toolbar
@@ -63,6 +67,7 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
         </net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout>
-
     </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/fragment_contact_detail_content"/>
 </android.support.design.widget.CoordinatorLayout>

@@ -16,4 +16,8 @@ public class CollectionUtil {
         }
         return result;
     }
+
+    public static <T> boolean isValid(List<T> collections) {
+        return collections != null && collections.size() > 0;
+    }
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.presentation.ui.adapter.viewholder.ContactListViewHolder;
+import net.radityalabs.contactapp.presentation.util.CollectionUtil;
 import net.radityalabs.contactapp.presentation.util.StringUtil;
 import net.radityalabs.contactapp.presentation.widget.OnSimpleClickListener;
 import net.radityalabs.contactapp.presentation.widget.OnVHClickListener;
@@ -26,15 +27,15 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListViewHold
     private Context mContext;
     private List<ContactListResponse> mContactList;
 
-    public ContactListAdapter(Context context, List<ContactListResponse> contactList, OnSimpleClickListener onClickListener) {
-        this.mContext = context;
+    public ContactListAdapter(List<ContactListResponse> contactList, OnSimpleClickListener onClickListener) {
         this.mContactList = contactList;
         this.mOnSimpleClickListener = onClickListener;
     }
 
     @Override
     public ContactListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_contact_list_item, parent, false);
+        this.mContext = parent.getContext();
+        View view = LayoutInflater.from(mContext).inflate(R.layout.fragment_contact_list_item, parent, false);
         ContactListViewHolder holder = new ContactListViewHolder(view);
         holder.setOnClickListener(this);
         return holder;
@@ -42,12 +43,14 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListViewHold
 
     @Override
     public void onBindViewHolder(ContactListViewHolder holder, int position) {
-        if (mContactList != null && mContactList.size() > 0) {
-            ContactListResponse item = mContactList.get(position);
-            holder.tvFirstChar.setText(StringUtil.getFirstChar(item.firstName));
-            holder.tvFullName.setText(StringUtil.mergeString(item.firstName, item.lastName));
-            holder.ivFavorite.setVisibility(View.VISIBLE);
+        if (!CollectionUtil.isValid(mContactList)) {
+            return;
         }
+
+        ContactListResponse item = mContactList.get(position);
+        holder.tvFirstChar.setText(StringUtil.getFirstChar(item.firstName));
+        holder.tvFullName.setText(StringUtil.mergeString(item.firstName, item.lastName));
+        holder.ivFavorite.setVisibility(View.VISIBLE);
     }
 
     @Override
