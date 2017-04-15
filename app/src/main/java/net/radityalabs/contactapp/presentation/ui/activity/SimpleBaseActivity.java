@@ -51,6 +51,12 @@ public abstract class SimpleBaseActivity extends AppCompatActivity {
         ContactApp.getInstance().removeActivity(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        onBackPressedSupport();
+    }
+
     protected void setupToolBar(@NonNull Toolbar toolbar, String title) {
         toolbar.setTitle(title);
         setSupportActionBar(toolbar);
