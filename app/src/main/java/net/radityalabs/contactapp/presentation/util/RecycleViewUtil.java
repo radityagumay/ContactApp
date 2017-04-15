@@ -15,4 +15,9 @@ public class RecycleViewUtil {
         linearLayoutManager.setStackFromEnd(true);
         return linearLayoutManager;
     }
+
+    public static LinearLayoutManager simpleLinearLayoutManager(Context context) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        return linearLayoutManager;
+    }
 }

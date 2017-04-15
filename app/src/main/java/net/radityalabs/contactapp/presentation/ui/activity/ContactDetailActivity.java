@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import net.radityalabs.contactapp.R;
+import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment;
 
 /**
@@ -14,11 +15,11 @@ import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment
 
 public class ContactDetailActivity extends SimpleBaseActivity {
 
-    public static final String EXTRA_USER_ID = "extra_user_id";
+    public static final String EXTRA_USER = "extra_user";
 
-    public static void navigate(Activity activity, int userId) {
+    public static void navigate(Activity activity, ContactListResponse user) {
         Intent intent = new Intent(activity, ContactDetailActivity.class);
-        intent.putExtra(EXTRA_USER_ID, userId);
+        intent.putExtra(EXTRA_USER, user);
         activity.startActivity(intent);
     }
 
@@ -29,7 +30,9 @@ public class ContactDetailActivity extends SimpleBaseActivity {
 
     @Override
     protected void setupEventAndData() {
-        addFragment(R.id.container, ContactDetailFragment.newInstance(getIntent().getIntExtra(EXTRA_USER_ID, -1)), ContactDetailFragment.TAG, ContactDetailFragment.TAG);
+        addFragment(R.id.container,
+                ContactDetailFragment.newInstance((ContactListResponse) getIntent().getParcelableExtra(EXTRA_USER)),
+                ContactDetailFragment.TAG, ContactDetailFragment.TAG);
     }
 
     @Override

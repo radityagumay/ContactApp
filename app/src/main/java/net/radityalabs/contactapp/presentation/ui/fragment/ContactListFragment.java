@@ -112,7 +112,7 @@ public class ContactListFragment extends BaseFragment<ContactListPresenter> impl
 
     @Override
     public void onClick(View view, int position) {
-        ContactDetailActivity.navigate(mActivity, mContactList.get(position).id);
+        ContactDetailActivity.navigate(mActivity, mContactList.get(position));
     }
 
     private void setupRecycleView() {
