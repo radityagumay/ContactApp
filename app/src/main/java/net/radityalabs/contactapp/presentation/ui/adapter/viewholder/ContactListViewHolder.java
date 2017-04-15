@@ -39,6 +39,6 @@ public class ContactListViewHolder extends RecyclerView.ViewHolder implements
 
     @Override
     public void onClick(View v) {
-        mSimpleClickListener.onClick(this, v, getAdapterPosition());
+        mSimpleClickListener.onClick(this, v, getAdapterPosition(), false);
     }
 }

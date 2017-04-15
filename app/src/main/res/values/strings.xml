@@ -17,4 +17,6 @@
     <string name="unable_to_contact_the_server">Unable to contact the server</string>
     <string name="no_contacts_found">No Contacts Found</string>
 
+    <string name="message">message</string>
+
 </resources>

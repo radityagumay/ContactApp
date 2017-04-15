@@ -10,6 +10,8 @@ import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.domain.model.ContactDetailInfoModel;
 import net.radityalabs.contactapp.domain.usecase.ContactDetailUseCase;
+import net.radityalabs.contactapp.presentation.factory.ToastFactory;
+import net.radityalabs.contactapp.presentation.manager.RClipBoardManager;
 import net.radityalabs.contactapp.presentation.presenter.contract.ContactDetailContract;
 import net.radityalabs.contactapp.presentation.rx.RxPresenter;
 import net.radityalabs.contactapp.presentation.util.PhoneUtil;
@@ -85,23 +87,31 @@ public class ContactDetailPresenter extends RxPresenter<ContactDetailContract.Vi
         return contacts;
     }
 
-    public void composeOnClick(View view, int position, ContactDetailInfoModel contact) {
+    public void composeOnClick(View view, int position, ContactDetailInfoModel contact, boolean isLongPressed) {
         switch (position) {
             case 0: {
                 switch (view.getId()) {
                     case R.id.iv_left_icon: {
-                        Intent intent = PhoneUtil.call(contact.bodyOne);
-                        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-                        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
-                            mContext.startActivity(intent);
+                        if (!isLongPressed) {
+                            Intent intent = PhoneUtil.call(contact.bodyOne);
+                            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                            if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+                                mContext.startActivity(intent);
+                            }
+                        } else {
+                            copyToClipBoard(contact.bodyOne);
                         }
                     }
                     break;
                     case R.id.iv_right_icon: {
-                        Intent intent = PhoneUtil.sms(contact.bodyOne);
-                        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-                        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
-                            mContext.startActivity(intent);
+                        if (!isLongPressed) {
+                            Intent intent = PhoneUtil.sms(contact.bodyOne);
+                            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                            if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+                                mContext.startActivity(intent);
+                            }
+                        } else {
+                            copyToClipBoard(contact.bodyOne);
                         }
                     }
                     break;
@@ -111,10 +121,14 @@ public class ContactDetailPresenter extends RxPresenter<ContactDetailContract.Vi
             case 1: {
                 switch (view.getId()) {
                     case R.id.iv_left_icon: {
-                        Intent intent = PhoneUtil.email(contact.bodyOne);
-                        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-                        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
-                            mContext.startActivity(Intent.createChooser(intent, "Choose an Email client :"));
+                        if (!isLongPressed) {
+                            Intent intent = PhoneUtil.email(contact.bodyOne);
+                            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                            if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+                                mContext.startActivity(Intent.createChooser(intent, "Choose an Email client :"));
+                            }
+                        } else {
+                            copyToClipBoard(contact.bodyOne);
                         }
                     }
                     break;
@@ -122,5 +136,13 @@ public class ContactDetailPresenter extends RxPresenter<ContactDetailContract.Vi
             }
             break;
         }
+    }
+
+    private void copyToClipBoard(String message) {
+        boolean isSuccess = RClipBoardManager.copyToClipboard(mContext, message);
+        StringBuilder builder = new StringBuilder();
+        builder.append(message).append(" ")
+                .append(isSuccess ? "Berhasil disalin" : "Gagal disalin");
+        ToastFactory.show(mContext, builder.toString());
     }
 }

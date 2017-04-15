@@ -111,7 +111,7 @@ public class ContactListFragment extends BaseFragment<ContactListPresenter> impl
     }
 
     @Override
-    public void onClick(View view, int position) {
+    public void onClick(View view, int position, boolean isLongPressed) {
         ContactDetailActivity.navigate(mActivity, mContactList.get(position));
     }
 

@@ -137,11 +137,6 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
 
     }
 
-    @Override
-    public void onClick(View view, int position) {
-        mPresenter.composeOnClick(view, position, mContactInfoList.get(position));
-    }
-
     private void setupRecycleView() {
         rvInfo.setHasFixedSize(true);
         rvInfo.setLayoutManager(RecycleViewUtil.simpleLinearLayoutManager(mContext));
@@ -152,5 +147,10 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
     private void setupView() {
         GlideHelper.loadFileNoAnimate(mContext, mContacts.profilePic, ivImage, R.mipmap.ic_betty_allen);
         tvFullName.setText(StringUtil.mergeString(mContacts.firstName, mContacts.lastName));
+    }
+
+    @Override
+    public void onClick(View view, int position, boolean isLongPressed) {
+        mPresenter.composeOnClick(view, position, mContactInfoList.get(position), isLongPressed);
     }
 }

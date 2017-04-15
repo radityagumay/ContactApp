@@ -11,6 +11,7 @@ import net.radityalabs.contactapp.presentation.widget.OnVHClickListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 /**
  * Created by radityagumay on 4/15/17.
@@ -35,7 +36,16 @@ public class ContactInfoViewHolder extends RecyclerView.ViewHolder implements
             R.id.iv_right_icon
     })
     public void onClick(View view) {
-        mSimpleClickListener.onClick(this, view, getAdapterPosition());
+        mSimpleClickListener.onClick(this, view, getAdapterPosition(), false);
+    }
+
+    @OnLongClick({
+            R.id.iv_left_icon,
+            R.id.iv_right_icon
+    })
+    public boolean onLongClick(View view) {
+        mSimpleClickListener.onClick(this, view, getAdapterPosition(), true);
+        return true;
     }
 
     public ContactInfoViewHolder(View itemView) {

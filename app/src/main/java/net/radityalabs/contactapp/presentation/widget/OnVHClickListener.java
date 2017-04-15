@@ -8,5 +8,5 @@ import android.view.View;
  */
 
 public interface OnVHClickListener {
-    void onClick(RecyclerView.ViewHolder vh, View view, int position);
+    void onClick(RecyclerView.ViewHolder vh, View view, int position, boolean isLongPressed);
 }

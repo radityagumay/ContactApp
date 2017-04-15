@@ -1,6 +1,5 @@
 package net.radityalabs.contactapp.presentation.widget;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
@@ -8,5 +7,5 @@ import android.view.View;
  */
 
 public interface OnSimpleClickListener {
-    void onClick(View view, int position);
+    void onClick(View view, int position, boolean isLongPressed);
 }
