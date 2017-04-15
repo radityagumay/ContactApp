@@ -2,12 +2,12 @@ package net.radityalabs.contactapp.presentation.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
@@ -16,6 +16,7 @@ import net.radityalabs.contactapp.presentation.presenter.ContactDetailPresenter;
 import net.radityalabs.contactapp.presentation.presenter.contract.ContactDetailContract;
 import net.radityalabs.contactapp.presentation.ui.adapter.ContactInfoAdapter;
 import net.radityalabs.contactapp.presentation.util.RecycleViewUtil;
+import net.radityalabs.contactapp.presentation.widget.OnSimpleClickListener;
 import net.radityalabs.contactapp.presentation.widget.VerticalSpaceItemDecoration;
 
 import java.util.ArrayList;
@@ -28,7 +29,8 @@ import butterknife.BindView;
  */
 
 public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> implements
-        ContactDetailContract.View {
+        ContactDetailContract.View,
+        OnSimpleClickListener {
 
     public static final String TAG = ContactDetailFragment.class.getSimpleName();
 
@@ -89,7 +91,7 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
         setupToolbar(toolbar, null);
 
         mContactInfoList = new ArrayList<>();
-        mContactInfoAdapter = new ContactInfoAdapter(mContactInfoList);
+        mContactInfoAdapter = new ContactInfoAdapter(mContactInfoList, this);
 
         setupRecycleView();
 
@@ -122,5 +124,10 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
         rvInfo.setLayoutManager(RecycleViewUtil.linearLayoutManager(mContext));
         rvInfo.addItemDecoration(new VerticalSpaceItemDecoration(mContext, 50, R.drawable.divider));
         rvInfo.setAdapter(mContactInfoAdapter);
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        mPresenter.composeOnClick(view, position, mContactInfoList.get(position));
     }
 }

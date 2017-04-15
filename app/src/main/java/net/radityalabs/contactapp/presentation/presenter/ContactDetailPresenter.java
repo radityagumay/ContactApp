@@ -1,7 +1,9 @@
 package net.radityalabs.contactapp.presentation.presenter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 
 import net.radityalabs.contactapp.ContactApp;
 import net.radityalabs.contactapp.R;
@@ -10,6 +12,7 @@ import net.radityalabs.contactapp.domain.model.ContactDetailInfoModel;
 import net.radityalabs.contactapp.domain.usecase.ContactDetailUseCase;
 import net.radityalabs.contactapp.presentation.presenter.contract.ContactDetailContract;
 import net.radityalabs.contactapp.presentation.rx.RxPresenter;
+import net.radityalabs.contactapp.presentation.util.PhoneUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,8 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by radityagumay on 4/13/17.
@@ -78,5 +83,44 @@ public class ContactDetailPresenter extends RxPresenter<ContactDetailContract.Vi
         email.bodyTwo = "Home";
         contacts.add(email);
         return contacts;
+    }
+
+    public void composeOnClick(View view, int position, ContactDetailInfoModel contact) {
+        switch (position) {
+            case 0: {
+                switch (view.getId()) {
+                    case R.id.iv_left_icon: {
+                        Intent intent = PhoneUtil.call(contact.bodyOne);
+                        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+                            mContext.startActivity(intent);
+                        }
+                    }
+                    break;
+                    case R.id.iv_right_icon: {
+                        Intent intent = PhoneUtil.sms(contact.bodyOne);
+                        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+                            mContext.startActivity(intent);
+                        }
+                    }
+                    break;
+                }
+            }
+            break;
+            case 1: {
+                switch (view.getId()) {
+                    case R.id.iv_left_icon: {
+                        Intent intent = PhoneUtil.email(contact.bodyOne);
+                        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+                            mContext.startActivity(Intent.createChooser(intent, "Choose an Email client :"));
+                        }
+                    }
+                    break;
+                }
+            }
+            break;
+        }
     }
 }
