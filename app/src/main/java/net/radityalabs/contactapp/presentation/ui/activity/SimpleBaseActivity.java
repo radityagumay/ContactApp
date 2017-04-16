@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import net.radityalabs.contactapp.ContactApp;
+import net.radityalabs.contactapp.R;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -60,7 +61,7 @@ public abstract class SimpleBaseActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (fragmentManager.getBackStackEntryCount() > 1) {
             fragmentManager.popBackStack();
-            notifyFragmentChanges(fragmentManager, currentFragment(fragmentManager));
+            currentFragment(currentFragment(fragmentManager));
         } else {
             super.onBackPressed();
             onBackPressedSupport();
@@ -90,11 +91,15 @@ public abstract class SimpleBaseActivity extends AppCompatActivity {
     }
 
     protected void replaceFragment(@IdRes int containerViewId, @NonNull Fragment fragment, String fragmentTag, String backStackStateName) {
-        fragmentManager.beginTransaction().replace(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                .replace(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
     }
 
     protected void addFragment(@IdRes int containerViewId, @NonNull Fragment fragment, String fragmentTag, String backStackStateName) {
-        fragmentManager.beginTransaction().add(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                .add(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
     }
 
     protected void popBackStack(String name) {
@@ -103,9 +108,7 @@ public abstract class SimpleBaseActivity extends AppCompatActivity {
 
     protected abstract void setupEventAndData();
 
-    protected void notifyFragmentChanges(FragmentManager fragmentManager, Fragment fragment) {
-        // TODO implement in derived classes
-    }
+    protected abstract void currentFragment(Fragment fragment);
 
     protected abstract int getLayout();
 }

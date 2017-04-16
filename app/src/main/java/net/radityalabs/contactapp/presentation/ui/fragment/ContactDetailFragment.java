@@ -70,33 +70,11 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setHasOptionsMenu(true);
         Bundle bundle = getArguments();
         if (bundle != null) {
             mContacts = bundle.getParcelable(USER);
         }
     }
-
-    /*@Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.action_favorite);
-        if (mContacts.isFavorite) {
-            item.setIcon(getResources().getDrawable(R.mipmap.ic_favourite_filled));
-        }
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_contact_detail, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
-    }*/
 
     @Override
     protected void setupInjection() {
@@ -118,7 +96,7 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
 
     @Override
     protected void onDestroyUI() {
-        mPresenter.disposed();
+        mPresenter.detachView();
     }
 
     @Override

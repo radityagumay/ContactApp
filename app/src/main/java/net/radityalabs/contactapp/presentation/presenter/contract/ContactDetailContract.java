@@ -21,6 +21,5 @@ public interface ContactDetailContract {
         List<ContactDetailInfoModel> getInfoBuilder(ContactDetailResponse contactDetailResponse);
 
         void getContactDetail(int userId);
-        void disposed();
     }
 }

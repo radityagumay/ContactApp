@@ -62,11 +62,6 @@ public class ContactDetailPresenter extends RxPresenter<ContactDetailContract.Vi
         addDisposable(disposable);
     }
 
-    @Override
-    public void disposed() {
-        dispose();
-    }
-
     public List<ContactDetailInfoModel> getInfoBuilder(ContactDetailResponse contactDetailResponse) {
         List<ContactDetailInfoModel> contacts = new ArrayList<>(2);
 

@@ -1,5 +1,7 @@
 package net.radityalabs.contactapp.presentation.presenter.contract;
 
+import android.support.annotation.IdRes;
+
 import net.radityalabs.contactapp.presentation.presenter.BasePresenter;
 import net.radityalabs.contactapp.presentation.view.BaseView;
 
@@ -10,7 +12,7 @@ import net.radityalabs.contactapp.presentation.view.BaseView;
 public interface AddContactContract {
 
     interface View extends BaseView {
-
+        void editTextEmpty(@IdRes int id);
     }
 
     interface Presenter extends BasePresenter<View> {

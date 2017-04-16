@@ -3,6 +3,7 @@ package net.radityalabs.contactapp.presentation.di.component;
 import net.radityalabs.contactapp.ContactApp;
 import net.radityalabs.contactapp.data.network.RetrofitHelper;
 import net.radityalabs.contactapp.data.realm.RealmHelper;
+import net.radityalabs.contactapp.domain.usecase.AddContactUseCase;
 import net.radityalabs.contactapp.domain.usecase.ContactDetailUseCase;
 import net.radityalabs.contactapp.domain.usecase.ContactListUseCase;
 import net.radityalabs.contactapp.presentation.di.module.AppModule;
@@ -29,4 +30,6 @@ public interface AppComponent {
     ContactListUseCase contactListUseCase();
 
     ContactDetailUseCase contactDetailUseCase();
+
+    AddContactUseCase addContactUseCase();
 }

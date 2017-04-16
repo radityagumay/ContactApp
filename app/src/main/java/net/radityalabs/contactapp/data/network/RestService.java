@@ -1,12 +1,15 @@
 package net.radityalabs.contactapp.data.network;
 
+import net.radityalabs.contactapp.data.network.request.ContactDetailRequest;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 
 import java.util.List;
 
 import io.reactivex.Single;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -15,11 +18,16 @@ import retrofit2.http.Path;
 
 public interface RestService {
 
-    @GET(ApiConstant.GET_CONTACT_LIST)
+    @GET(ApiConstant.CONTACT)
     Single<List<ContactListResponse>> getContactList();
 
-    @GET(ApiConstant.GET_CONTACT_DETAIL)
+    @GET(ApiConstant.CONTACT_DETAIL)
     Single<ContactDetailResponse> getContactDetail(
             @Path("id") int userId
+    );
+
+    @POST(ApiConstant.CONTACT)
+    Single<ContactDetailResponse> addContact(
+            @Body ContactDetailRequest request
     );
 }

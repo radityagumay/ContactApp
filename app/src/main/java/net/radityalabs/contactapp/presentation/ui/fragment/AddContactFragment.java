@@ -1,6 +1,7 @@
 package net.radityalabs.contactapp.presentation.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -57,6 +58,10 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
         return fragment;
     }
 
+    public static AddContactFragment newInstance() {
+        return new AddContactFragment();
+    }
+
     public AddContactFragment() {
 
     }
@@ -86,19 +91,28 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
         setupView();
     }
 
-    private void setupView() {
-        etName.addTextChangedListener(mPresenter.composetWatcherListerner(R.id.et_name));
-        etEmail.addTextChangedListener(mPresenter.composetWatcherListerner(R.id.et_email));
-        etPhone.addTextChangedListener(mPresenter.composetWatcherListerner(R.id.et_phone));
-    }
-
     @Override
     protected void onDestroyUI() {
-
+        mPresenter.detachView();
     }
 
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_add_contact;
+    }
+
+    @Override
+    public void editTextEmpty(@IdRes int id) {
+
+    }
+
+    private void setupView() {
+        etPhone.addTextChangedListener(mPresenter.composetWatcherListerner(R.id.et_phone));
+        etEmail.addTextChangedListener(mPresenter.composetWatcherListerner(R.id.et_email));
+        etName.addTextChangedListener(mPresenter.composetWatcherListerner(R.id.et_name));
+    }
+
+    public void saveProfile() {
+        mPresenter.saveProfile();
     }
 }

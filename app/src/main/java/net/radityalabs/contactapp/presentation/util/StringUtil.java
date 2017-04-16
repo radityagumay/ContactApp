@@ -22,4 +22,8 @@ public class StringUtil {
         }
         return builder.toString();
     }
+
+    public static boolean isValidName(String str) {
+        return str.length() < 7 || str.matches(".*([ \t]).*");
+    }
 }

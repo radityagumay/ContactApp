@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -63,6 +62,10 @@ public class ContactDetailActivity extends SimpleBaseActivity {
                 changeToAddFragment();
                 return true;
             }
+            case R.id.action_add: {
+                ((AddContactFragment) mSelectedFragment).saveProfile();
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -74,8 +77,7 @@ public class ContactDetailActivity extends SimpleBaseActivity {
     }
 
     @Override
-    protected void notifyFragmentChanges(FragmentManager fragmentManager, Fragment fragment) {
-        super.notifyFragmentChanges(fragmentManager, fragment);
+    protected void currentFragment(Fragment fragment) {
         invalidateOptionsMenu();
     }
 

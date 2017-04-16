@@ -4,6 +4,7 @@ import net.radityalabs.contactapp.ContactApp;
 import net.radityalabs.contactapp.data.network.RestService;
 import net.radityalabs.contactapp.data.network.RetrofitHelper;
 import net.radityalabs.contactapp.data.realm.RealmHelper;
+import net.radityalabs.contactapp.domain.usecase.AddContactUseCase;
 import net.radityalabs.contactapp.domain.usecase.ContactDetailUseCase;
 import net.radityalabs.contactapp.domain.usecase.ContactListUseCase;
 
@@ -52,5 +53,11 @@ public class AppModule {
     @Singleton
     ContactDetailUseCase provideContactDetailUseCase(RetrofitHelper retrofitHelper, RealmHelper realmHelper, ContactApp context) {
         return new ContactDetailUseCase(retrofitHelper, realmHelper, context.getApplicationContext());
+    }
+
+    @Provides
+    @Singleton
+    AddContactUseCase provideAddContactUseCase(RetrofitHelper retrofitHelper, ContactApp context) {
+        return new AddContactUseCase(retrofitHelper, context.getApplicationContext());
     }
 }

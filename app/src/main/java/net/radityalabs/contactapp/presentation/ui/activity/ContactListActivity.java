@@ -3,7 +3,7 @@ package net.radityalabs.contactapp.presentation.ui.activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,12 +13,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import net.radityalabs.contactapp.R;
+import net.radityalabs.contactapp.presentation.ui.fragment.AddContactFragment;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactListFragment;
 
 import butterknife.BindView;
 
 public class ContactListActivity extends SimpleBaseActivity implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener {
+
+    private Fragment mSelectedFragment;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -58,7 +61,15 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
 
     @Override
     protected void setupEventAndData() {
-        addFragment(R.id.container, ContactListFragment.newInstance("", ""), ContactListFragment.TAG, ContactListFragment.TAG);
+        mSelectedFragment = ContactListFragment.newInstance("", "");
+        addFragment(R.id.container, mSelectedFragment, ContactListFragment.TAG, ContactListFragment.TAG);
+    }
+
+    @Override
+    protected void currentFragment(Fragment fragment) {
+        if (fragment.getTag().equalsIgnoreCase(ContactListFragment.TAG)) {
+            toolbar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -107,6 +118,13 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
 
     @Override
     public void onClick(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        switch (view.getId()) {
+            case R.id.fab: {
+                toolbar.setVisibility(View.GONE);
+                mSelectedFragment = AddContactFragment.newInstance();
+                addFragment(R.id.container, mSelectedFragment, AddContactFragment.TAG, AddContactFragment.TAG);
+            }
+            break;
+        }
     }
 }
