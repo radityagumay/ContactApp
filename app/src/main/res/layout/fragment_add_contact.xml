@@ -1,0 +1,55 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:paddingTop="24dp"
+        android:transitionName="shareView">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleTextColor="@color/white"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/violet_black"
+            android:paddingBottom="4dp">
+
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_profile_large"/>
+
+            <ImageView
+                android:id="@+id/iv_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_marginBottom="3dp"
+                android:paddingBottom="@dimen/fragment_contact_detail_full_name_text_view_padding_bottom"
+                android:paddingEnd="@dimen/fragment_contact_detail_full_name_text_view_padding_left"
+                android:paddingLeft="0dp"
+                android:paddingRight="@dimen/fragment_contact_detail_full_name_text_view_padding_left"
+                android:paddingStart="0dp"
+                android:src="@drawable/ic_menu_camera"
+                android:tint="@color/white"/>
+        </FrameLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/fragment_add_contact_content"/>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -6,6 +6,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,6 +16,8 @@ import net.radityalabs.contactapp.ContactApp;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+
 /**
  * Created by radityagumay on 4/13/17.
  */
@@ -23,6 +26,8 @@ public abstract class SimpleBaseActivity extends AppCompatActivity {
 
     protected Activity mContext;
     protected Unbinder mUnBinder;
+
+    private final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,8 +58,13 @@ public abstract class SimpleBaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        onBackPressedSupport();
+        if (fragmentManager.getBackStackEntryCount() > 1) {
+            fragmentManager.popBackStack();
+            notifyFragmentChanges(fragmentManager, currentFragment(fragmentManager));
+        } else {
+            super.onBackPressed();
+            onBackPressedSupport();
+        }
     }
 
     protected void setupToolBar(@NonNull Toolbar toolbar, String title) {
@@ -75,15 +85,27 @@ public abstract class SimpleBaseActivity extends AppCompatActivity {
         finish();
     }
 
+    private Fragment currentFragment(FragmentManager fragmentManager) {
+        return fragmentManager.findFragmentByTag(fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName());
+    }
+
     protected void replaceFragment(@IdRes int containerViewId, @NonNull Fragment fragment, String fragmentTag, String backStackStateName) {
-        getSupportFragmentManager().beginTransaction().replace(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
+        fragmentManager.beginTransaction().replace(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
     }
 
     protected void addFragment(@IdRes int containerViewId, @NonNull Fragment fragment, String fragmentTag, String backStackStateName) {
-        getSupportFragmentManager().beginTransaction().add(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
+        fragmentManager.beginTransaction().add(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
+    }
+
+    protected void popBackStack(String name) {
+        fragmentManager.popBackStack(name, POP_BACK_STACK_INCLUSIVE);
     }
 
     protected abstract void setupEventAndData();
+
+    protected void notifyFragmentChanges(FragmentManager fragmentManager, Fragment fragment) {
+        // TODO implement in derived classes
+    }
 
     protected abstract int getLayout();
 }

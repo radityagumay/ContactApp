@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
+import net.radityalabs.contactapp.presentation.ui.fragment.AddContactFragment;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment;
 
 /**
@@ -16,6 +21,8 @@ import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment
 public class ContactDetailActivity extends SimpleBaseActivity {
 
     public static final String EXTRA_USER = "extra_user";
+
+    private Fragment mSelectedFragment;
 
     public static void navigate(Activity activity, ContactListResponse user) {
         Intent intent = new Intent(activity, ContactDetailActivity.class);
@@ -29,14 +36,70 @@ public class ContactDetailActivity extends SimpleBaseActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mSelectedFragment instanceof ContactDetailFragment) {
+            ((ContactDetailFragment) mSelectedFragment).setFavoriteMarked(menu);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (mSelectedFragment instanceof ContactDetailFragment) {
+            getMenuInflater().inflate(R.menu.menu_contact_detail, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_add_detail, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings: {
+                return true;
+            }
+            case R.id.action_edit: {
+                changeToAddFragment();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void setupEventAndData() {
-        addFragment(R.id.container,
-                ContactDetailFragment.newInstance((ContactListResponse) getIntent().getParcelableExtra(EXTRA_USER)),
-                ContactDetailFragment.TAG, ContactDetailFragment.TAG);
+        changeToDetailFragment();
+    }
+
+    @Override
+    protected void notifyFragmentChanges(FragmentManager fragmentManager, Fragment fragment) {
+        super.notifyFragmentChanges(fragmentManager, fragment);
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
     protected int getLayout() {
         return R.layout.activity_contact_detail;
+    }
+
+    private void changeToAddFragment() {
+        mSelectedFragment = AddContactFragment.newInstance((ContactListResponse) getIntent().getParcelableExtra(EXTRA_USER));
+        addFragment(R.id.container, mSelectedFragment, AddContactFragment.TAG, AddContactFragment.TAG);
+
+        invalidateOptionsMenu();
+    }
+
+    private void changeToDetailFragment() {
+        mSelectedFragment = ContactDetailFragment.newInstance((ContactListResponse) getIntent().getParcelableExtra(EXTRA_USER));
+        addFragment(R.id.container, mSelectedFragment, ContactDetailFragment.TAG, ContactDetailFragment.TAG);
+
+        invalidateOptionsMenu();
     }
 }

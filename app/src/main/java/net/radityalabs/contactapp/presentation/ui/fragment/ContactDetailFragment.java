@@ -70,14 +70,14 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         Bundle bundle = getArguments();
         if (bundle != null) {
             mContacts = bundle.getParcelable(USER);
         }
     }
 
-    @Override
+    /*@Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_favorite);
         if (mContacts.isFavorite) {
@@ -96,7 +96,7 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     protected void setupInjection() {
@@ -105,7 +105,7 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
 
     @Override
     protected void setupEventAndData() {
-        setupToolbar(toolbar, null);
+        setupToolbar(toolbar, null, -1);
 
         mContactInfoList = new ArrayList<>();
         mContactInfoAdapter = new ContactInfoAdapter(mContactInfoList, this);
@@ -137,6 +137,11 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
 
     }
 
+    @Override
+    public void onClick(View view, int position, boolean isLongPressed) {
+        mPresenter.composeOnClick(view, position, mContactInfoList.get(position), isLongPressed);
+    }
+
     private void setupRecycleView() {
         rvInfo.setHasFixedSize(true);
         rvInfo.setLayoutManager(RecycleViewUtil.simpleLinearLayoutManager(mContext));
@@ -149,8 +154,10 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
         tvFullName.setText(StringUtil.mergeString(mContacts.firstName, mContacts.lastName));
     }
 
-    @Override
-    public void onClick(View view, int position, boolean isLongPressed) {
-        mPresenter.composeOnClick(view, position, mContactInfoList.get(position), isLongPressed);
+    public void setFavoriteMarked(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_favorite);
+        if (mContacts.isFavorite) {
+            item.setIcon(getResources().getDrawable(R.mipmap.ic_favourite_filled));
+        }
     }
 }

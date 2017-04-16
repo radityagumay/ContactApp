@@ -3,6 +3,7 @@ package net.radityalabs.contactapp.presentation.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -122,14 +123,19 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment imp
         }
     }
 
-    protected void setupToolbar(Toolbar toolbar, String title) {
+    protected void setupToolbar(Toolbar toolbar, String title, @DrawableRes int resId) {
         boolean isVisible = title != null;
         ((AppCompatActivity) mContext).setSupportActionBar(toolbar);
+        if (resId != -1) {
+            toolbar.setNavigationIcon(resId);
+        }
+
         ((AppCompatActivity) mContext).getSupportActionBar().setTitle(title);
         ((AppCompatActivity) mContext).getSupportActionBar().setDisplayShowTitleEnabled(isVisible);
         ((AppCompatActivity) mContext).getSupportActionBar().setDisplayHomeAsUpEnabled(isVisible);
         ((AppCompatActivity) mContext).getSupportActionBar().setDisplayShowHomeEnabled(isVisible);
     }
+
 
     protected abstract void setupInjection();
 
