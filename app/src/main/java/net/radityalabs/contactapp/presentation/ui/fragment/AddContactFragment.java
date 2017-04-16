@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
+import net.radityalabs.contactapp.presentation.factory.ToastFactory;
 import net.radityalabs.contactapp.presentation.presenter.AddContactPresenter;
 import net.radityalabs.contactapp.presentation.presenter.contract.AddContactContract;
 
@@ -104,6 +105,11 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
     @Override
     public void editTextEmpty(@IdRes int id) {
 
+    }
+
+    @Override
+    public void addContactSuccess(String s) {
+        ToastFactory.show(mContext, s);
     }
 
     private void setupView() {

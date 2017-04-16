@@ -14,6 +14,7 @@ import android.view.View;
 
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.presentation.ui.fragment.AddContactFragment;
+import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactListFragment;
 
 import butterknife.BindView;
@@ -67,9 +68,7 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
 
     @Override
     protected void currentFragment(Fragment fragment) {
-        if (fragment.getTag().equalsIgnoreCase(ContactListFragment.TAG)) {
-            toolbar.setVisibility(View.VISIBLE);
-        }
+        visibileView(true);
     }
 
     @Override
@@ -89,14 +88,27 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        if (mSelectedFragment instanceof ContactListFragment) {
+            getMenuInflater().inflate(R.menu.main, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_add_detail, menu);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_settings: {
+                return true;
+            }
+            case R.id.action_add: {
+                ((AddContactFragment) mSelectedFragment).saveProfile();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -120,11 +132,16 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab: {
-                toolbar.setVisibility(View.GONE);
+                visibileView(false);
                 mSelectedFragment = AddContactFragment.newInstance();
                 addFragment(R.id.container, mSelectedFragment, AddContactFragment.TAG, AddContactFragment.TAG);
             }
             break;
         }
+    }
+
+    private void visibileView(boolean visible) {
+        fab.setVisibility(visible ? View.VISIBLE : View.GONE);
+        toolbar.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 }

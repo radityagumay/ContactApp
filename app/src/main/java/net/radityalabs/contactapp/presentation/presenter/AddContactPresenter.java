@@ -9,6 +9,7 @@ import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.request.ContactDetailRequest;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.domain.usecase.AddContactUseCase;
+import net.radityalabs.contactapp.presentation.factory.ToastFactory;
 import net.radityalabs.contactapp.presentation.presenter.contract.AddContactContract;
 import net.radityalabs.contactapp.presentation.rx.RxPresenter;
 
@@ -52,6 +53,7 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
                 switch (id) {
                     case R.id.et_name: {
                         firstName = s.toString();
+                        lastName = firstName;
                     }
                     break;
                     case R.id.et_phone: {
@@ -77,12 +79,12 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
                 .subscribe(new Consumer<ContactDetailResponse>() {
                     @Override
                     public void accept(ContactDetailResponse response) throws Exception {
-
+                        mView.addContactSuccess("Berhasil menambah kontak");
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        mView.showError(throwable.getMessage());
                     }
                 });
         addDisposable(disposable);

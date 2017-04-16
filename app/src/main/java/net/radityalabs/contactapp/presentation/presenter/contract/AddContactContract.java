@@ -13,6 +13,7 @@ public interface AddContactContract {
 
     interface View extends BaseView {
         void editTextEmpty(@IdRes int id);
+        void addContactSuccess(String s);
     }
 
     interface Presenter extends BasePresenter<View> {
