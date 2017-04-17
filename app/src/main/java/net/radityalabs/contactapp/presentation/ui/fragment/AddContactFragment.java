@@ -1,5 +1,6 @@
 package net.radityalabs.contactapp.presentation.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -8,9 +9,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
+import net.radityalabs.contactapp.presentation.annotation.PermissionType;
 import net.radityalabs.contactapp.presentation.factory.ToastFactory;
 import net.radityalabs.contactapp.presentation.helper.GlideHelper;
 import net.radityalabs.contactapp.presentation.presenter.AddContactPresenter;
@@ -55,7 +59,12 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
             R.id.iv_camera
     })
     public void onClick(View view) {
-        mPresenter.composeOnClick(view);
+        switch (view.getId()) {
+            case R.id.iv_camera: {
+                mPresenter.requestPermission(mActivity, PermissionType.CAMERA);
+            }
+            break;
+        }
     }
 
     public interface AddContactObserver {
@@ -107,7 +116,9 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
         setupToolbar(toolbar, "Add new contact", R.mipmap.ic_back);
         setupView();
 
-        mPresenter.getDetailContact(mContacts.id);
+        if (mContacts != null) {
+            mPresenter.getDetailContact(mContacts.id);
+        }
     }
 
     @Override
@@ -147,6 +158,27 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
 
         ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
         GlideHelper.loadFileNoAnimate(mContext, response.profilePic, ivImage, R.mipmap.ic_betty_allen);
+    }
+
+    @Override
+    public void onPermissionGranted(@PermissionType int type) {
+        mPresenter.openMediaGallery(mActivity);
+    }
+
+    @Override
+    public void onSuccessPickMedia(Intent data) {
+        Glide.with(mContext).load(data.getData()).into(ivImage);
+    }
+
+    @Override
+    public void onErrorPickImage(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPresenter.onActivityResult(requestCode, resultCode, data, mContext);
     }
 
     private void setupView() {

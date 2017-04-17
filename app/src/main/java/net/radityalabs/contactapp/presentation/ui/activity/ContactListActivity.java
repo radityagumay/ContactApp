@@ -1,5 +1,6 @@
 package net.radityalabs.contactapp.presentation.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -137,6 +138,14 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
                 addFragment(R.id.container, mSelectedFragment, AddContactFragment.TAG, AddContactFragment.TAG);
             }
             break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mSelectedFragment instanceof AddContactFragment) {
+            ((AddContactFragment) mSelectedFragment).onActivityResult(requestCode, resultCode, data);
         }
     }
 

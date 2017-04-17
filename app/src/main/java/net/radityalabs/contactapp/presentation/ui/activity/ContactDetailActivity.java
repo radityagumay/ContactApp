@@ -92,6 +92,14 @@ public class ContactDetailActivity extends SimpleBaseActivity implements
         return R.layout.activity_contact_detail;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mSelectedFragment instanceof AddContactFragment) {
+            ((AddContactFragment) mSelectedFragment).onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     private void changeToAddFragment() {
         mSelectedFragment = AddContactFragment.newInstance(
                 (ContactListResponse) getIntent().getParcelableExtra(EXTRA_USER))

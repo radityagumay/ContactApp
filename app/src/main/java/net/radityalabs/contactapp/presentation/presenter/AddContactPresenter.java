@@ -1,17 +1,26 @@
 package net.radityalabs.contactapp.presentation.presenter;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.request.ContactDetailRequest;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.domain.usecase.AddContactUseCase;
+import net.radityalabs.contactapp.presentation.annotation.PermissionType;
 import net.radityalabs.contactapp.presentation.presenter.contract.AddContactContract;
 import net.radityalabs.contactapp.presentation.rx.RxPresenter;
+import net.radityalabs.contactapp.presentation.util.BuildUtil;
+import net.radityalabs.contactapp.presentation.util.FileUtil;
+import net.radityalabs.contactapp.presentation.util.IntentUtil;
+import net.radityalabs.contactapp.presentation.util.PermissionUtil;
 
 import javax.inject.Inject;
 
@@ -35,9 +44,6 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
     @Inject
     public AddContactPresenter(AddContactUseCase useCase) {
         this.useCase = useCase;
-    }
-
-    public void composeOnClick(View view) {
     }
 
     public TextWatcher composetWatcherListerner(final int id) {
@@ -111,11 +117,11 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
     public void saveEditProfile(ContactDetailResponse body) {
         Disposable disposable = useCase.editContact(
                 body.id, request(
-                !TextUtils.isEmpty(firstName) ? firstName : body.firstName,
-                !TextUtils.isEmpty(lastName) ? lastName : body.lastName,
-                !TextUtils.isEmpty(email) ? email : body.email,
-                !TextUtils.isEmpty(phoneNumber) ? phoneNumber : body.phoneNumber,
-                !TextUtils.isEmpty(profilePic) ? profilePic : body.profilePic))
+                        !TextUtils.isEmpty(firstName) ? firstName : body.firstName,
+                        !TextUtils.isEmpty(lastName) ? lastName : body.lastName,
+                        !TextUtils.isEmpty(email) ? email : body.email,
+                        !TextUtils.isEmpty(phoneNumber) ? phoneNumber : body.phoneNumber,
+                        !TextUtils.isEmpty(profilePic) ? profilePic : body.profilePic))
                 .subscribe(new Consumer<ContactDetailResponse>() {
                     @Override
                     public void accept(ContactDetailResponse response) throws Exception {
@@ -137,5 +143,48 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
                 .setEmail(email)
                 .setPhoneNumber(phoneNumber)
                 .setProfilePic(profilePic).build();
+    }
+
+    public void requestPermission(Activity activity, @PermissionType int type) {
+        if (BuildUtil.isAndroidM()) {
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) !=
+                    PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                            PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, PermissionUtil.camera(), type);
+            } else {
+                mView.onPermissionGranted(type);
+            }
+        } else {
+            mView.onPermissionGranted(type);
+        }
+    }
+
+    public void openMediaGallery(Activity activity) {
+        activity.startActivityForResult(Intent.createChooser(IntentUtil.getMediaFromGallery(), "Select Media"), FileUtil.SELECT_MEDIA_FROM_GALLERY);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data, Context context) {
+        switch (requestCode) {
+            case FileUtil.SELECT_MEDIA_FROM_GALLERY: {
+                if (resultCode == Activity.RESULT_OK) {
+                    pickMediaOnGallery(data, context);
+                }
+            }
+            break;
+        }
+    }
+
+    private void pickMediaOnGallery(Intent data, Context context) {
+        if (data != null) {
+            String mimeType = FileUtil.getMimeType(data, context);
+            if (mimeType.startsWith("image")) {
+                mView.onSuccessPickMedia(data);
+            }
+        } else {
+            mView.onErrorPickImage(new Throwable("RESULT NOT OK "));
+        }
     }
 }
