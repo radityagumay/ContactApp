@@ -1,6 +1,7 @@
 package net.radityalabs.contactapp.domain.usecase;
 
 import android.content.Context;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import net.radityalabs.contactapp.data.network.RestService;
@@ -9,6 +10,7 @@ import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.data.realm.RealmHelper;
 import net.radityalabs.contactapp.data.realm.table.ContactObject;
 import net.radityalabs.contactapp.presentation.factory.DialogFactory;
+import net.radityalabs.contactapp.presentation.listener.Callback;
 import net.radityalabs.contactapp.presentation.rx.RxUtil;
 
 import java.util.ArrayList;
@@ -47,6 +49,21 @@ public class ContactListUseCase {
         this.context = context;
     }
 
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    public void getContactListTest(final Callback<List<ContactListResponse>> callback) {
+        getContactListApi().subscribe(new Consumer<List<ContactListResponse>>() {
+            @Override
+            public void accept(List<ContactListResponse> responses) throws Exception {
+                callback.onSuccess(responses);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                callback.onFailure(throwable);
+            }
+        });
+    }
+
     public Flowable<List<ContactListResponse>> getContactList() {
         return Single.create(new SingleOnSubscribe<List<ContactObject>>() {
             @Override
@@ -61,22 +78,22 @@ public class ContactListUseCase {
             }
         }).compose(RxUtil.<List<ContactObject>>singleIo())
                 .map(new Function<List<ContactObject>, List<ContactListResponse>>() {
-            @Override
-            public List<ContactListResponse> apply(List<ContactObject> contacts) throws Exception {
-                List<ContactListResponse> response = new ArrayList<>(contacts.size());
-                for (int i = 0; i < contacts.size(); i++) {
-                    ContactListResponse obj = new ContactListResponse();
-                    obj.id = (int) contacts.get(i).id;
-                    obj.firstName = contacts.get(i).firstName;
-                    obj.lastName = contacts.get(i).lastName;
-                    obj.profilePic = contacts.get(i).profilePic;
-                    obj.isFavorite = contacts.get(i).isFavorite;
-                    obj.detailUrl = contacts.get(i).detailUrl;
-                    response.add(obj);
-                }
-                return response;
-            }
-        }).toFlowable();
+                    @Override
+                    public List<ContactListResponse> apply(List<ContactObject> contacts) throws Exception {
+                        List<ContactListResponse> response = new ArrayList<>(contacts.size());
+                        for (int i = 0; i < contacts.size(); i++) {
+                            ContactListResponse obj = new ContactListResponse();
+                            obj.id = (int) contacts.get(i).id;
+                            obj.firstName = contacts.get(i).firstName;
+                            obj.lastName = contacts.get(i).lastName;
+                            obj.profilePic = contacts.get(i).profilePic;
+                            obj.isFavorite = contacts.get(i).isFavorite;
+                            obj.detailUrl = contacts.get(i).detailUrl;
+                            response.add(obj);
+                        }
+                        return response;
+                    }
+                }).toFlowable();
     }
 
     public Flowable<List<ContactListResponse>> getContactListApi() {

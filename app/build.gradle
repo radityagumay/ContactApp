@@ -35,17 +35,14 @@ ext {
     OKIO_VERSION = "1.11.0"
     GLIDE_VERSION = "3.7.0"
     DAGGER_VERSION = "2.0.2"
+    MOCKITO_VERSION = '2.7.1'
+    ESPRESSO_VERSION = '2.2.2'
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-
     /* android design */
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "com.android.support:appcompat-v7:$ANDROID_SUPPORT_DESIGN_VERSION"
     compile "com.android.support:design:$ANDROID_SUPPORT_DESIGN_VERSION"
     compile "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_DESIGN_VERSION"
@@ -81,4 +78,41 @@ dependencies {
 
     /* widget */
     compile 'net.opacapp:multiline-collapsingtoolbar:1.3.1'
+
+    /* espresso */
+    testCompile 'junit:junit:4.12'
+    compile('com.android.support.test:rules:0.5') {
+        exclude group: "javax.inject", module: "javax.inject"
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile('com.android.support.test:runner:0.5') {
+        exclude group: "javax.inject", module: "javax.inject"
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile("com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION") {
+        exclude group: "javax.inject", module: "javax.inject"
+        exclude group: "com.squareup", module: "javawriter"
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile("com.android.support.test.espresso:espresso-contrib:$ESPRESSO_VERSION") {
+        exclude module: "recyclerview-v7"
+        exclude module: "support-v4"
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: "javax.inject", module: "javax.inject"
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile('com.android.support.test.espresso:espresso-intents:2.2.1') {
+        exclude group: "javax.inject", module: "javax.inject"
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile("com.android.support.test.espresso:espresso-idling-resource:$ESPRESSO_VERSION") {
+        exclude module: "recyclerview-v7"
+        exclude module: "support-v4"
+        exclude group: "javax.inject", module: "javax.inject"
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
+    /* mockito */
+    testCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
+    androidTestCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
 }
