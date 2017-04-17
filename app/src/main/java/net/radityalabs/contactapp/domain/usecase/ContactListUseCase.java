@@ -52,7 +52,6 @@ public class ContactListUseCase {
             @Override
             public void subscribe(SingleEmitter<List<ContactObject>> emmit) throws Exception {
                 Realm realm = Realm.getInstance(realmHelper.buildRealmConfiguration());
-
                 String[] fieldNames = {ContactObject.FIRST_NAME};
                 Sort[] sort = {Sort.ASCENDING};
                 List<ContactObject> contacts = realm.copyFromRealm(
@@ -60,7 +59,8 @@ public class ContactListUseCase {
                 emmit.onSuccess(contacts.size() > 0 ? contacts : new ArrayList<ContactObject>());
                 realm.close();
             }
-        }).compose(RxUtil.<List<ContactObject>>singleIo()).map(new Function<List<ContactObject>, List<ContactListResponse>>() {
+        }).compose(RxUtil.<List<ContactObject>>singleIo())
+                .map(new Function<List<ContactObject>, List<ContactListResponse>>() {
             @Override
             public List<ContactListResponse> apply(List<ContactObject> contacts) throws Exception {
                 List<ContactListResponse> response = new ArrayList<>(contacts.size());

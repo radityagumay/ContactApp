@@ -9,10 +9,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import net.radityalabs.contactapp.R;
+import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.presentation.factory.ToastFactory;
+import net.radityalabs.contactapp.presentation.helper.GlideHelper;
 import net.radityalabs.contactapp.presentation.presenter.AddContactPresenter;
 import net.radityalabs.contactapp.presentation.presenter.contract.AddContactContract;
+import net.radityalabs.contactapp.presentation.util.KeyboardUtil;
+import net.radityalabs.contactapp.presentation.util.StringUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -101,6 +105,8 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
     protected void setupEventAndData() {
         setupToolbar(toolbar, "Add new contact", R.mipmap.ic_back);
         setupView();
+
+        mPresenter.getDetailContact(mContacts.id);
     }
 
     @Override
@@ -121,13 +127,23 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
     @Override
     public void addContactSuccess(String s) {
         ToastFactory.show(mContext, s);
-
+        KeyboardUtil.hideSoftInput(mActivity);
         mPresenter.animateTimer().subscribe(new Consumer<Long>() {
             @Override
             public void accept(Long aLong) throws Exception {
                 mObserver.removeStack(TAG);
             }
         });
+    }
+
+    @Override
+    public void onGetDetailContactSuccess(ContactDetailResponse response) {
+        etName.setText(StringUtil.mergeString(response.firstName, response.lastName));
+        etPhone.setText(response.phoneNumber);
+        etEmail.setText(response.email);
+
+        ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        GlideHelper.loadFileNoAnimate(mContext, response.profilePic, ivImage, R.mipmap.ic_betty_allen);
     }
 
     private void setupView() {
@@ -137,6 +153,6 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
     }
 
     public void saveProfile() {
-        mPresenter.saveProfile();
+        mPresenter.saveProfile(mContacts);
     }
 }

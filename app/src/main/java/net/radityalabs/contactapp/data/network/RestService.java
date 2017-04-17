@@ -10,6 +10,7 @@ import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
@@ -29,5 +30,16 @@ public interface RestService {
     @POST(ApiConstant.CONTACT)
     Single<ContactDetailResponse> addContact(
             @Body ContactDetailRequest request
+    );
+
+    @PUT(ApiConstant.CONTACT_DETAIL)
+    Single<ContactDetailResponse> editContact(
+            @Path("id") int userId,
+            @Body ContactDetailRequest request
+    );
+
+    @GET(ApiConstant.CONTACT_DETAIL)
+    Single<ContactDetailResponse> getUserDetail(
+            @Path("id") int userId
     );
 }

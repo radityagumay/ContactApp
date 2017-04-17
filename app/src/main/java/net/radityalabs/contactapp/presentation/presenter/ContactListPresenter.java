@@ -7,6 +7,7 @@ import net.radityalabs.contactapp.ContactApp;
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.domain.usecase.ContactListUseCase;
+import net.radityalabs.contactapp.presentation.factory.DialogFactory;
 import net.radityalabs.contactapp.presentation.presenter.contract.ContactListContract;
 import net.radityalabs.contactapp.presentation.rx.RxPresenter;
 import net.radityalabs.contactapp.presentation.util.ConnectionUtil;

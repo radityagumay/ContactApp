@@ -1,6 +1,7 @@
 package net.radityalabs.contactapp.presentation.presenter;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.View;
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.request.ContactDetailRequest;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
+import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.domain.usecase.AddContactUseCase;
 import net.radityalabs.contactapp.presentation.presenter.contract.AddContactContract;
 import net.radityalabs.contactapp.presentation.rx.RxPresenter;
@@ -74,12 +76,58 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
         };
     }
 
-    public void saveProfile() {
-        Disposable disposable = useCase.addNewContact(request())
+    public void saveProfile(ContactListResponse contact) {
+        Disposable disposable;
+        if (contact == null) {
+            disposable = useCase.addNewContact(request(contact))
+                    .subscribe(new Consumer<ContactDetailResponse>() {
+                        @Override
+                        public void accept(ContactDetailResponse response) throws Exception {
+                            mView.addContactSuccess("Berhasil menambah kontak");
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            mView.showError(throwable.getMessage());
+                        }
+                    });
+        } else {
+            disposable = useCase.editContact(request(contact))
+                    .subscribe(new Consumer<ContactDetailResponse>() {
+                        @Override
+                        public void accept(ContactDetailResponse response) throws Exception {
+                            mView.addContactSuccess("Berhasil merubah kontak");
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            mView.showError(throwable.getMessage());
+                        }
+                    });
+        }
+        addDisposable(disposable);
+    }
+
+    private ContactDetailRequest request(ContactListResponse contact) {
+        boolean isNew = false;
+        if (!TextUtils.isEmpty(contact.firstName)) {
+            isNew = true;
+        }
+
+        return new ContactDetailRequest.Builder()
+                .setFirstName(isNew ? contact.firstName : firstName)
+                .setLastName(isNew ? contact.lastName : lastName)
+                .setEmail(isNew ? email : "")
+                .setPhoneNumber(isNew ? contact.firstName : phoneNumber)
+                .setProfilePic(isNew ? contact.firstName : profilePic).build();
+    }
+
+    public void getDetailContact(int id) {
+        Disposable disposal = useCase.getUserDetail(id)
                 .subscribe(new Consumer<ContactDetailResponse>() {
                     @Override
                     public void accept(ContactDetailResponse response) throws Exception {
-                        mView.addContactSuccess("Berhasil menambah kontak");
+                        mView.onGetDetailContactSuccess(response);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -87,16 +135,7 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
                         mView.showError(throwable.getMessage());
                     }
                 });
-        addDisposable(disposable);
-    }
-
-    private ContactDetailRequest request() {
-        return new ContactDetailRequest.Builder()
-                .setFirstName(firstName)
-                .setLastName(lastName)
-                .setEmail(email)
-                .setPhoneNumber(phoneNumber)
-                .setProfilePic(profilePic).build();
+        addDisposable(disposal);
     }
 
     public Single<Long> animateTimer() {

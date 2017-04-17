@@ -11,6 +11,7 @@ import net.radityalabs.contactapp.presentation.rx.RxUtil;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -32,7 +33,18 @@ public class AddContactUseCase {
                 .compose(RxUtil.<ContactDetailResponse>singleNewThread());
     }
 
+    public Single<ContactDetailResponse> editContact(ContactDetailRequest payload) {
+        return mService.addContact(payload)
+                .compose(RxUtil.<ContactDetailResponse>singleNewThread());
+    }
+
+    public Single<ContactDetailResponse> getUserDetail(int id) {
+        return mService.getUserDetail(id)
+                .compose(RxUtil.<ContactDetailResponse>singleNewThread());
+    }
+
     public Single<Long> animateTimer() {
-        return Single.timer(500, TimeUnit.MILLISECONDS, Schedulers.io());
+        return Single.timer(500, TimeUnit.MILLISECONDS, Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

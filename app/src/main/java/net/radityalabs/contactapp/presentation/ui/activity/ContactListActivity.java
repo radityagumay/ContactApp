@@ -147,6 +147,8 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
 
     @Override
     public void removeStack(String tag) {
+        visibileView(true);
+
         popBackStack(tag);
     }
 }

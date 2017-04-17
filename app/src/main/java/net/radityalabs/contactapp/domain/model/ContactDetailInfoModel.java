@@ -1,7 +1,5 @@
 package net.radityalabs.contactapp.domain.model;
 
-import android.graphics.drawable.Drawable;
-
 /**
  * Created by radityagumay on 4/15/17.
  */

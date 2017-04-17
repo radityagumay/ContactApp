@@ -93,7 +93,9 @@ public class ContactDetailActivity extends SimpleBaseActivity implements
     }
 
     private void changeToAddFragment() {
-        mSelectedFragment = AddContactFragment.newInstance((ContactListResponse) getIntent().getParcelableExtra(EXTRA_USER)).setObserver(this);
+        mSelectedFragment = AddContactFragment.newInstance(
+                (ContactListResponse) getIntent().getParcelableExtra(EXTRA_USER))
+                .setObserver(this);
         addFragment(R.id.container, mSelectedFragment, AddContactFragment.TAG, AddContactFragment.TAG);
 
         invalidateOptionsMenu();
