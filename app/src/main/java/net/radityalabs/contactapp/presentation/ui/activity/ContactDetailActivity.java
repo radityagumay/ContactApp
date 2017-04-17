@@ -64,7 +64,7 @@ public class ContactDetailActivity extends SimpleBaseActivity implements
                 return true;
             }
             case R.id.action_add: {
-                ((AddContactFragment) mSelectedFragment).saveProfile();
+                ((AddContactFragment) mSelectedFragment).saveEditProfile();
                 return true;
             }
             default:

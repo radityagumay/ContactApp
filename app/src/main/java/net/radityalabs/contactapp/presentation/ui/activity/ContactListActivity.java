@@ -103,7 +103,7 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
                 return true;
             }
             case R.id.action_add: {
-                ((AddContactFragment) mSelectedFragment).saveProfile();
+                ((AddContactFragment) mSelectedFragment).saveAddProfile();
                 return true;
             }
             default:

@@ -9,7 +9,6 @@ import android.view.View;
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.request.ContactDetailRequest;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
-import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.domain.usecase.AddContactUseCase;
 import net.radityalabs.contactapp.presentation.presenter.contract.AddContactContract;
 import net.radityalabs.contactapp.presentation.rx.RxPresenter;
@@ -45,13 +44,10 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.d(TAG, "beforeTextChanged");
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.d(TAG, "onTextChanged");
-
                 switch (id) {
                     case R.id.et_name: {
                         firstName = s.toString();
@@ -71,55 +67,25 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d(TAG, "afterTextChanged");
             }
         };
     }
 
-    public void saveProfile(ContactListResponse contact) {
-        Disposable disposable;
-        if (contact == null) {
-            disposable = useCase.addNewContact(request(contact))
-                    .subscribe(new Consumer<ContactDetailResponse>() {
-                        @Override
-                        public void accept(ContactDetailResponse response) throws Exception {
-                            mView.addContactSuccess("Berhasil menambah kontak");
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            mView.showError(throwable.getMessage());
-                        }
-                    });
-        } else {
-            disposable = useCase.editContact(request(contact))
-                    .subscribe(new Consumer<ContactDetailResponse>() {
-                        @Override
-                        public void accept(ContactDetailResponse response) throws Exception {
-                            mView.addContactSuccess("Berhasil merubah kontak");
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            mView.showError(throwable.getMessage());
-                        }
-                    });
-        }
+    public void saveAddProfile() {
+        Disposable disposable = useCase.addNewContact(request(
+                firstName, lastName, email, phoneNumber, profilePic))
+                .subscribe(new Consumer<ContactDetailResponse>() {
+                    @Override
+                    public void accept(ContactDetailResponse response) throws Exception {
+                        mView.addContactSuccess("Berhasil menambah kontak");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.showError(throwable.getMessage());
+                    }
+                });
         addDisposable(disposable);
-    }
-
-    private ContactDetailRequest request(ContactListResponse contact) {
-        boolean isNew = false;
-        if (!TextUtils.isEmpty(contact.firstName)) {
-            isNew = true;
-        }
-
-        return new ContactDetailRequest.Builder()
-                .setFirstName(isNew ? contact.firstName : firstName)
-                .setLastName(isNew ? contact.lastName : lastName)
-                .setEmail(isNew ? email : "")
-                .setPhoneNumber(isNew ? contact.firstName : phoneNumber)
-                .setProfilePic(isNew ? contact.firstName : profilePic).build();
     }
 
     public void getDetailContact(int id) {
@@ -140,5 +106,36 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
 
     public Single<Long> animateTimer() {
         return useCase.animateTimer();
+    }
+
+    public void saveEditProfile(ContactDetailResponse body) {
+        Disposable disposable = useCase.editContact(
+                body.id, request(
+                !TextUtils.isEmpty(firstName) ? firstName : body.firstName,
+                !TextUtils.isEmpty(lastName) ? lastName : body.lastName,
+                !TextUtils.isEmpty(email) ? email : body.email,
+                !TextUtils.isEmpty(phoneNumber) ? phoneNumber : body.phoneNumber,
+                !TextUtils.isEmpty(profilePic) ? profilePic : body.profilePic))
+                .subscribe(new Consumer<ContactDetailResponse>() {
+                    @Override
+                    public void accept(ContactDetailResponse response) throws Exception {
+                        mView.addContactSuccess("Berhasil merubah kontak");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.showError(throwable.getMessage());
+                    }
+                });
+        addDisposable(disposable);
+    }
+
+    private ContactDetailRequest request(String firstName, String lastName, String email, String phoneNumber, String profilePic) {
+        return new ContactDetailRequest.Builder()
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setEmail(email)
+                .setPhoneNumber(phoneNumber)
+                .setProfilePic(profilePic).build();
     }
 }

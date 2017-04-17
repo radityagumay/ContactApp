@@ -35,6 +35,7 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
 
     private AddContactObserver mObserver;
     private ContactListResponse mContacts;
+    private ContactDetailResponse mUserDetailInfo;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -138,6 +139,8 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
 
     @Override
     public void onGetDetailContactSuccess(ContactDetailResponse response) {
+        this.mUserDetailInfo = response;
+
         etName.setText(StringUtil.mergeString(response.firstName, response.lastName));
         etPhone.setText(response.phoneNumber);
         etEmail.setText(response.email);
@@ -152,7 +155,11 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
         etName.addTextChangedListener(mPresenter.composetWatcherListerner(R.id.et_name));
     }
 
-    public void saveProfile() {
-        mPresenter.saveProfile(mContacts);
+    public void saveAddProfile() {
+        mPresenter.saveAddProfile();
+    }
+
+    public void saveEditProfile() {
+        mPresenter.saveEditProfile(mUserDetailInfo);
     }
 }

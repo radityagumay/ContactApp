@@ -33,8 +33,8 @@ public class AddContactUseCase {
                 .compose(RxUtil.<ContactDetailResponse>singleNewThread());
     }
 
-    public Single<ContactDetailResponse> editContact(ContactDetailRequest payload) {
-        return mService.addContact(payload)
+    public Single<ContactDetailResponse> editContact(int userId, ContactDetailRequest payload) {
+        return mService.editContact(userId, payload)
                 .compose(RxUtil.<ContactDetailResponse>singleNewThread());
     }
 
