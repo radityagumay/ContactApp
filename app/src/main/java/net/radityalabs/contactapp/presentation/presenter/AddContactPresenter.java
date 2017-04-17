@@ -9,12 +9,12 @@ import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.request.ContactDetailRequest;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.domain.usecase.AddContactUseCase;
-import net.radityalabs.contactapp.presentation.factory.ToastFactory;
 import net.radityalabs.contactapp.presentation.presenter.contract.AddContactContract;
 import net.radityalabs.contactapp.presentation.rx.RxPresenter;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
@@ -97,5 +97,9 @@ public class AddContactPresenter extends RxPresenter<AddContactContract.View> im
                 .setEmail(email)
                 .setPhoneNumber(phoneNumber)
                 .setProfilePic(profilePic).build();
+    }
+
+    public Single<Long> animateTimer() {
+        return useCase.animateTimer();
     }
 }

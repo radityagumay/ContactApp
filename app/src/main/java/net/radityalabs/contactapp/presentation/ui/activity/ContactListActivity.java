@@ -14,12 +14,12 @@ import android.view.View;
 
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.presentation.ui.fragment.AddContactFragment;
-import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactListFragment;
 
 import butterknife.BindView;
 
 public class ContactListActivity extends SimpleBaseActivity implements NavigationView.OnNavigationItemSelectedListener,
+        AddContactFragment.AddContactObserver,
         View.OnClickListener {
 
     private Fragment mSelectedFragment;
@@ -133,7 +133,7 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
         switch (view.getId()) {
             case R.id.fab: {
                 visibileView(false);
-                mSelectedFragment = AddContactFragment.newInstance();
+                mSelectedFragment = AddContactFragment.newInstance().setObserver(this);
                 addFragment(R.id.container, mSelectedFragment, AddContactFragment.TAG, AddContactFragment.TAG);
             }
             break;
@@ -143,5 +143,10 @@ public class ContactListActivity extends SimpleBaseActivity implements Navigatio
     private void visibileView(boolean visible) {
         fab.setVisibility(visible ? View.VISIBLE : View.GONE);
         toolbar.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void removeStack(String tag) {
+        popBackStack(tag);
     }
 }

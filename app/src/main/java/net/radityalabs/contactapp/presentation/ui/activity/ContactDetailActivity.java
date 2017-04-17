@@ -17,7 +17,8 @@ import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment
  * Created by radityagumay on 4/13/17.
  */
 
-public class ContactDetailActivity extends SimpleBaseActivity {
+public class ContactDetailActivity extends SimpleBaseActivity implements
+        AddContactFragment.AddContactObserver {
 
     public static final String EXTRA_USER = "extra_user";
 
@@ -92,7 +93,7 @@ public class ContactDetailActivity extends SimpleBaseActivity {
     }
 
     private void changeToAddFragment() {
-        mSelectedFragment = AddContactFragment.newInstance((ContactListResponse) getIntent().getParcelableExtra(EXTRA_USER));
+        mSelectedFragment = AddContactFragment.newInstance((ContactListResponse) getIntent().getParcelableExtra(EXTRA_USER)).setObserver(this);
         addFragment(R.id.container, mSelectedFragment, AddContactFragment.TAG, AddContactFragment.TAG);
 
         invalidateOptionsMenu();
@@ -103,5 +104,10 @@ public class ContactDetailActivity extends SimpleBaseActivity {
         addFragment(R.id.container, mSelectedFragment, ContactDetailFragment.TAG, ContactDetailFragment.TAG);
 
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public void removeStack(String tag) {
+        popBackStack(tag);
     }
 }

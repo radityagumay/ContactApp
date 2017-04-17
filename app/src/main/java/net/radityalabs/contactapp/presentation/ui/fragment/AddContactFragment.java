@@ -16,6 +16,7 @@ import net.radityalabs.contactapp.presentation.presenter.contract.AddContactCont
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by radityagumay on 4/16/17.
@@ -28,6 +29,7 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
 
     private static final String EXTRA_USER = "extra_user";
 
+    private AddContactObserver mObserver;
     private ContactListResponse mContacts;
 
     @BindView(R.id.toolbar)
@@ -51,6 +53,10 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
         mPresenter.composeOnClick(view);
     }
 
+    public interface AddContactObserver {
+        void removeStack(String tag);
+    }
+
     public static AddContactFragment newInstance(ContactListResponse user) {
         AddContactFragment fragment = new AddContactFragment();
         Bundle bundle = new Bundle();
@@ -65,6 +71,11 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
 
     public AddContactFragment() {
 
+    }
+
+    public AddContactFragment setObserver(AddContactObserver observer) {
+        this.mObserver = observer;
+        return this;
     }
 
     @Override
@@ -110,6 +121,13 @@ public class AddContactFragment extends BaseFragment<AddContactPresenter> implem
     @Override
     public void addContactSuccess(String s) {
         ToastFactory.show(mContext, s);
+
+        mPresenter.animateTimer().subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long aLong) throws Exception {
+                mObserver.removeStack(TAG);
+            }
+        });
     }
 
     private void setupView() {
