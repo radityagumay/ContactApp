@@ -6,6 +6,7 @@ import android.util.Log;
 
 import net.radityalabs.contactapp.data.network.RestService;
 import net.radityalabs.contactapp.data.network.RetrofitHelper;
+import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.data.realm.RealmHelper;
 import net.radityalabs.contactapp.data.realm.table.ContactObject;

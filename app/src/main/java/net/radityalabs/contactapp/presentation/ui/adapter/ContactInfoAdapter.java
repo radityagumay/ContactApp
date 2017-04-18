@@ -65,4 +65,5 @@ public class ContactInfoAdapter extends RecyclerView.Adapter<ContactInfoViewHold
     public void onClick(RecyclerView.ViewHolder vh, View view, int position, boolean isLongPressed) {
         mSimpleClickListener.onClick(view, position, isLongPressed);
     }
+
 }
