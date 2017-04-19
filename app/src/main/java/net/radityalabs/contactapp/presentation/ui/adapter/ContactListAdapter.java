@@ -1,6 +1,7 @@
 package net.radityalabs.contactapp.presentation.ui.adapter;
 
 import android.content.Context;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,9 @@ import net.radityalabs.contactapp.presentation.util.StringUtil;
 import net.radityalabs.contactapp.presentation.widget.OnSimpleClickListener;
 import net.radityalabs.contactapp.presentation.widget.OnVHClickListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -63,4 +67,12 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListViewHold
         mOnSimpleClickListener.onClick(view, position, isLongPressed);
     }
 
+    @VisibleForTesting
+    public List<String> getNameAsc() {
+        List<String> list = new ArrayList<>(mContactList.size());
+        for (int i = 0; i < mContactList.size(); i++) {
+            list.add(mContactList.get(i).firstName);
+        }
+        return list;
+    }
 }

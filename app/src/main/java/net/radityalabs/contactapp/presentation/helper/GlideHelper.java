@@ -2,6 +2,7 @@ package net.radityalabs.contactapp.presentation.helper;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -17,9 +18,14 @@ import com.bumptech.glide.request.target.Target;
 public class GlideHelper {
 
     public static void loadFileNoAnimate(@NonNull Context context,
-                                         @NonNull final String url,
+                                         final String url,
                                          @NonNull final ImageView resId,
                                          final int placeHolder) {
+        if (TextUtils.isEmpty(url)) {
+            resId.setImageResource(placeHolder);
+            return;
+        }
+
         Glide.with(context)
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)

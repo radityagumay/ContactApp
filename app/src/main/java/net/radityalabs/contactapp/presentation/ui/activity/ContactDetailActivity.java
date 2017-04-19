@@ -24,6 +24,7 @@ import static net.radityalabs.contactapp.presentation.util.task.EspressoIdlingRe
 public class ContactDetailActivity extends SimpleBaseActivity implements
         AddContactFragment.AddContactObserver {
 
+    public static final String TAG = ContactDetailActivity.class.getSimpleName();
     public static final String EXTRA_USER = "extra_user";
 
     private Fragment mSelectedFragment;
