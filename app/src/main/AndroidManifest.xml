@@ -32,8 +32,9 @@
         <activity
             android:name=".presentation.ui.activity.ContactDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".presentation.ui.activity.TestActivity"/>
+        <activity
+            android:name=".presentation.ui.activity.TestActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
