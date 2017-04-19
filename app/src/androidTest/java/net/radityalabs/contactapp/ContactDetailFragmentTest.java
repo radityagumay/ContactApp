@@ -75,6 +75,11 @@ public class ContactDetailFragmentTest {
         onView(withId(R.id.iv_image)).check(matches(withDrawable(R.mipmap.ic_betty_allen)));
     }
 
+    @Test
+    public void do_calling_test() {
+
+    }
+
     private ContactDetailActivity startActivity() {
         return mContactDetailRule.launchActivity(
                 ContactDetailActivity.navigateTest(mContactListRule.getActivity(), contactListResponse()));

@@ -1,7 +1,9 @@
 package net.radityalabs.contactapp;
 
 import net.radityalabs.contactapp.data.network.RestService;
+import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
+import net.radityalabs.contactapp.domain.usecase.ContactDetailUseCase;
 import net.radityalabs.contactapp.domain.usecase.ContactListUseCase;
 import net.radityalabs.contactapp.presentation.listener.Callback;
 import net.radityalabs.contactapp.presentation.presenter.ContactListPresenter;
@@ -11,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -20,8 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import io.reactivex.Single;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by radityagumay on 4/17/17.
@@ -31,15 +39,16 @@ import static org.mockito.Mockito.doAnswer;
 public class ContactListPresenterTest {
 
     @Mock
-    private ContactListUseCase useCase;
+    private ContactListUseCase mockUseCase;
     @Mock
     private List<ContactListResponse> contactListMock;
     @Mock
-    private RestService service;
+    private RestService mockService;
     @Mock
     private ContactListContract.View view;
+    @Mock
+    private Callback callback;
 
-    private ContactListPresenter presenter;
     private List<ContactListResponse> mContactListModel;
 
     @Before
@@ -50,13 +59,13 @@ public class ContactListPresenterTest {
 
     @Test
     public void getContactList() {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((Callback) invocation.getArguments()[0]).onSuccess(mContactListModel);
-                return null;
-            }
-        }).when(useCase).getContactListTest(any(Callback.class));
+        when(mockService.getContactList()).thenReturn(Single.just(generateModel()));
+
+        mockUseCase = new ContactListUseCase(mockService);
+        mockUseCase.getContactListTest(callback);
+
+        verify(callback, Mockito.times(1)).onSuccess(mContactListModel);
+        verify(callback, never()).onFailure(any(Throwable.class));
     }
 
     private static final String[] FIRST_NAME = new String[]{
@@ -73,8 +82,8 @@ public class ContactListPresenterTest {
             ContactListResponse obj = new ContactListResponse();
             obj.id = i;
             obj.isFavorite = true;
-            obj.firstName = FIRST_NAME[new Random().nextInt(5)];
-            obj.lastName = LAST_NAME[new Random().nextInt(5)];
+            obj.firstName = FIRST_NAME[0];
+            obj.lastName = LAST_NAME[0];
             obj.detailUrl = "https://www.radityalabs.net";
             obj.profilePic = "http://radityalabs.net/bootstrap/img/me.png";
             models.add(obj);

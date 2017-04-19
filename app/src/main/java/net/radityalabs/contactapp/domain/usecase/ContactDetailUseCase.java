@@ -2,6 +2,7 @@ package net.radityalabs.contactapp.domain.usecase;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import net.radityalabs.contactapp.data.network.RestService;
@@ -9,6 +10,7 @@ import net.radityalabs.contactapp.data.network.RetrofitHelper;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.data.realm.RealmHelper;
 import net.radityalabs.contactapp.data.realm.table.ContactObject;
+import net.radityalabs.contactapp.presentation.listener.Callback;
 import net.radityalabs.contactapp.presentation.rx.RxUtil;
 
 import io.reactivex.Flowable;
@@ -38,6 +40,26 @@ public class ContactDetailUseCase {
         this.service = retrofitHelper.getRestService();
         this.realmHelper = realmHelper;
         this.context = context;
+    }
+
+    @VisibleForTesting
+    public ContactDetailUseCase(RestService service) {
+        this.service = service;
+    }
+
+    @VisibleForTesting
+    public void getDetailContactTest(int id, final Callback<ContactDetailResponse> callback) {
+        service.getContactDetail(id).subscribe(new Consumer<ContactDetailResponse>() {
+            @Override
+            public void accept(ContactDetailResponse response) throws Exception {
+                callback.onSuccess(response);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                callback.onFailure(throwable);
+            }
+        });
     }
 
     public Flowable<ContactDetailResponse> getDetailContact(final int userId) {
