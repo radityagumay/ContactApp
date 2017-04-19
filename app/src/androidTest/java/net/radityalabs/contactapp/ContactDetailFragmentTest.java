@@ -1,21 +1,16 @@
 package net.radityalabs.contactapp;
 
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.presentation.ui.activity.ContactDetailActivity;
 import net.radityalabs.contactapp.presentation.ui.activity.ContactListActivity;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment;
+import net.radityalabs.contactapp.test.DrawableMatcher;
 import net.radityalabs.contactapp.test.FragmentTestRule;
 
 import org.hamcrest.Matcher;
@@ -24,17 +19,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import butterknife.BindView;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.allOf;
+import static net.radityalabs.contactapp.test.ViewAction.setTextInTextView;
 
 /**
  * Created by radityagumay on 4/19/17.
@@ -54,6 +45,10 @@ public class ContactDetailFragmentTest {
     public ActivityTestRule<ContactListActivity> mContactListRule =
             new ActivityTestRule<>(ContactListActivity.class);
 
+    @Rule
+    public IntentsTestRule<ContactDetailActivity> mContactDetailRule =
+            new IntentsTestRule<>(ContactDetailActivity.class, true, false);
+
     @Before
     public void setup() {
         startActivity();
@@ -65,7 +60,7 @@ public class ContactDetailFragmentTest {
     }
 
     @Test
-    public void is_view_available(){
+    public void is_view_available() {
         onView(withId(R.id.rv_info)).check(matches(isDisplayed()));
         onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
         onView(withId(R.id.tv_full_name)).check(matches(isDisplayed()));
@@ -73,14 +68,12 @@ public class ContactDetailFragmentTest {
     }
 
     @Test
-    public void is_widget_filled(){
+    public void is_widget_filled() {
         onView(withId(R.id.tv_full_name)).perform(setTextInTextView(STRING_TO_BE_TYPED), closeSoftKeyboard());
         onView(withId(R.id.tv_full_name)).check(matches(withText(STRING_TO_BE_TYPED)));
-    }
 
-    @Rule
-    public IntentsTestRule<ContactDetailActivity> mContactDetailRule =
-            new IntentsTestRule<>(ContactDetailActivity.class, true, false);
+        onView(withId(R.id.iv_image)).check(matches(withDrawable(R.mipmap.ic_betty_allen)));
+    }
 
     private ContactDetailActivity startActivity() {
         return mContactDetailRule.launchActivity(
@@ -98,23 +91,11 @@ public class ContactDetailFragmentTest {
         return obj;
     }
 
-    public static ViewAction setTextInTextView(final String value){
-        return new ViewAction() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public Matcher<View> getConstraints() {
-                return allOf(isDisplayed(), isAssignableFrom(TextView.class));
-            }
+    public static Matcher<View> withDrawable(final int resourceId) {
+        return new DrawableMatcher(resourceId);
+    }
 
-            @Override
-            public void perform(UiController uiController, View view) {
-                ((TextView) view).setText(value);
-            }
-
-            @Override
-            public String getDescription() {
-                return "replace text";
-            }
-        };
+    public static Matcher<View> noDrawable() {
+        return new DrawableMatcher(-1);
     }
 }
