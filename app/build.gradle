@@ -119,11 +119,6 @@ dependencies {
     testCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
     androidTestCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
 
-    /* robolectric */
-    /*testCompile("org.robolectric:robolectric:$ROBOELECTRIC_VERSION") {
-        exclude group: "javax.inject", module: "javax.inject"
-    }*/
-
     // multidex
     compile 'com.android.support:multidex:1.0.1'
 }
