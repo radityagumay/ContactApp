@@ -35,6 +35,13 @@ public class ContactDetailActivity extends SimpleBaseActivity implements
         activity.startActivity(intent);
     }
 
+    @VisibleForTesting
+    public static Intent navigateTest(Activity activity, ContactListResponse user) {
+        Intent intent = new Intent(activity, ContactDetailActivity.class);
+        intent.putExtra(EXTRA_USER, user);
+        return intent;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

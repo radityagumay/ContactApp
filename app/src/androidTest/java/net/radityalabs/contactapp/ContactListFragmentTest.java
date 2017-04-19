@@ -2,12 +2,18 @@ package net.radityalabs.contactapp;
 
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.core.deps.guava.collect.Ordering;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.filters.LargeTest;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 
+import net.radityalabs.contactapp.data.network.response.ContactListResponse;
+import net.radityalabs.contactapp.presentation.ui.activity.ContactDetailActivity;
+import net.radityalabs.contactapp.presentation.ui.activity.ContactListActivity;
 import net.radityalabs.contactapp.presentation.ui.adapter.ContactListAdapter;
+import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactListFragment;
 import net.radityalabs.contactapp.test.FragmentTestRule;
 
@@ -39,8 +45,20 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class ContactListFragmentTest {
 
     @Rule
+    public ActivityTestRule<ContactListActivity> mContactListRule =
+            new ActivityTestRule<>(ContactListActivity.class);
+
+    @Rule
     public FragmentTestRule<ContactListFragment> mFragmentTestRule =
             new FragmentTestRule<>(ContactListFragment.class);
+
+    @Rule
+    public FragmentTestRule<ContactDetailFragment> mContactDetailFragmentRule =
+            new FragmentTestRule<>(ContactDetailFragment.class);
+
+    @Rule
+    public IntentsTestRule<ContactDetailActivity> mContactDetailRule =
+            new IntentsTestRule<>(ContactDetailActivity.class, true, false);
 
     @Before
     public void setup() {
@@ -59,8 +77,30 @@ public class ContactListFragmentTest {
     }
 
     @Test
+    public void recycle_item_navigate_contactdetailactivity() {
+        startActivity();
+        onView(withId(R.id.tv_full_name)).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void is_sorted_alphabetically() {
         onView(withId(R.id.rv_contact)).check(matches(isSortedAlphabetically()));
+    }
+
+    private ContactDetailActivity startActivity() {
+        return mContactDetailRule.launchActivity(
+                ContactDetailActivity.navigateTest(mContactListRule.getActivity(), contactListResponse()));
+    }
+
+    private ContactListResponse contactListResponse() {
+        ContactListResponse obj = new ContactListResponse();
+        obj.id = 1;
+        obj.firstName = "adit";
+        obj.lastName = "gumay";
+        obj.profilePic = null;
+        obj.isFavorite = true;
+        obj.detailUrl = null;
+        return obj;
     }
 
     private static Matcher<View> isSortedAlphabetically() {
