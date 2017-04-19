@@ -1,6 +1,7 @@
 package net.radityalabs.contactapp.presentation.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -45,6 +46,11 @@ public class ContactListFragment extends BaseFragment<ContactListPresenter> impl
         bundle.putString(PARAM_2, param2);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @VisibleForTesting
+    public static ContactListFragment newInstance() {
+        return new ContactListFragment();
     }
 
     public ContactListFragment() {

@@ -32,6 +32,8 @@
         <activity
             android:name=".presentation.ui.activity.ContactDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".presentation.ui.activity.TestActivity"/>
     </application>
 
 </manifest>

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +14,8 @@ import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.presentation.ui.fragment.AddContactFragment;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment;
+
+import static net.radityalabs.contactapp.presentation.util.task.EspressoIdlingResource.getIdlingResource;
 
 /**
  * Created by radityagumay on 4/13/17.
@@ -98,6 +102,11 @@ public class ContactDetailActivity extends SimpleBaseActivity implements
         if (mSelectedFragment instanceof AddContactFragment) {
             ((AddContactFragment) mSelectedFragment).onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @VisibleForTesting
+    public IdlingResource getCountingIdlingResource() {
+        return getIdlingResource();
     }
 
     private void changeToAddFragment() {

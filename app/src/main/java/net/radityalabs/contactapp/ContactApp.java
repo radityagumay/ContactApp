@@ -2,6 +2,8 @@ package net.radityalabs.contactapp;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import net.radityalabs.contactapp.presentation.di.component.AppComponent;
 import net.radityalabs.contactapp.presentation.di.component.DaggerAppComponent;
@@ -34,6 +36,12 @@ public class ContactApp extends Application {
         sInstance = this;
 
         setupRealm();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     private void setupRealm() {
