@@ -1,9 +1,7 @@
 package net.radityalabs.contactapp;
 
-import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.core.deps.guava.collect.Ordering;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -40,8 +38,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @LargeTest
 public class ContactListFragmentTest {
 
-    private static final int ITEM_BELOW_THE_FOLD = 10;
-
     @Rule
     public FragmentTestRule<ContactListFragment> mFragmentTestRule =
             new FragmentTestRule<>(ContactListFragment.class);
@@ -57,17 +53,10 @@ public class ContactListFragmentTest {
     }
 
     @Test
-    public void scroll_to_item_below_fold_check_its_id() {
-        onView(ViewMatchers.withId(R.id.rv_contact)).perform(RecyclerViewActions.actionOnItemAtPosition(ITEM_BELOW_THE_FOLD, click()));
+    public void recycle_item_selected() {
+        onView(withId(R.id.rv_contact)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.tv_full_name)).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void recycle_item_selected() {
-        onView(withId(R.id.rv_contact)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
-    }
-
 
     @Test
     public void is_sorted_alphabetically() {
