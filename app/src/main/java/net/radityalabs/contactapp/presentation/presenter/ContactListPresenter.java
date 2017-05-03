@@ -122,6 +122,7 @@ public class ContactListPresenter extends RxPresenter<ContactListContract.View> 
                     @Override
                     public void accept(List<ContactListResponse> responses) throws Exception {
                         Log.d(TAG, "Success fetch contact list from api: " + responses.size());
+
                         if (responses.size() > 0) {
                             mView.showContactListRange(responses);
                         } else {
