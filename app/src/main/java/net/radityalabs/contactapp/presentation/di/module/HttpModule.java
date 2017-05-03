@@ -5,6 +5,8 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import net.radityalabs.contactapp.BuildConfig;
 import net.radityalabs.contactapp.data.network.ApiConstant;
 import net.radityalabs.contactapp.data.network.RestService;
+import net.radityalabs.contactapp.data.network.interceptor.CacheInterceptor;
+import net.radityalabs.contactapp.data.network.interceptor.HeaderInterceptor;
 import net.radityalabs.contactapp.presentation.di.qualifier.DefaultUrl;
 import net.radityalabs.contactapp.presentation.util.ConnectionUtil;
 
@@ -49,20 +51,35 @@ public class HttpModule {
     @Provides
     @DefaultUrl
     Retrofit provideRetrofit(Retrofit.Builder builder, OkHttpClient client) {
-        return createRetrofit(builder, client, ApiConstant.BASE_URL);
+        return builder.baseUrl(ApiConstant.BASE_URL)
+                .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 
     @Singleton
     @Provides
-    OkHttpClient provideClient(OkHttpClient.Builder builder) {
+    CacheInterceptor provideCacheInterceptor() {
+        return new CacheInterceptor();
+    }
+
+    @Singleton
+    @Provides
+    HeaderInterceptor provideHeaderInterceptor() {
+        return new HeaderInterceptor();
+    }
+
+    @Singleton
+    @Provides
+    OkHttpClient provideClient(OkHttpClient.Builder builder, CacheInterceptor cacheInterceptor, HeaderInterceptor headerInterceptor) {
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(loggingInterceptor);
         }
-        Interceptor cacheInterceptor = setupInterceptor();
         builder.addNetworkInterceptor(cacheInterceptor);
-        builder.addInterceptor(cacheInterceptor);
+        builder.addInterceptor(headerInterceptor);
         builder.cache(setupCache());
         builder.connectTimeout(20, TimeUnit.SECONDS);
         builder.readTimeout(20, TimeUnit.SECONDS);
@@ -79,42 +96,5 @@ public class HttpModule {
 
     private Cache setupCache() {
         return new Cache(new File(ApiConstant.PATH_CACHE), 1024 * 1024 * 50);
-    }
-
-    private Interceptor setupInterceptor() {
-        return new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
-                if (!ConnectionUtil.isNetworkConnected()) {
-                    request = request.newBuilder()
-                            .cacheControl(CacheControl.FORCE_CACHE)
-                            .build();
-                }
-                Response response = chain.proceed(request);
-                if (ConnectionUtil.isNetworkConnected()) {
-                    int maxAge = 0;
-                    response.newBuilder()
-                            .header("Cache-Control", "public, max-age=" + maxAge)
-                            .removeHeader("Pragma")
-                            .build();
-                } else {
-                    int maxStale = 60 * 60 * 24 * 28;
-                    response.newBuilder()
-                            .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
-                            .removeHeader("Pragma")
-                            .build();
-                }
-                return response;
-            }
-        };
-    }
-
-    private Retrofit createRetrofit(Retrofit.Builder builder, OkHttpClient client, String url) {
-        return builder.baseUrl(url)
-                .client(client)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
     }
 }
