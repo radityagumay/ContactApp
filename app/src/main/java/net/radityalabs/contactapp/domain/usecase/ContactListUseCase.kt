@@ -35,10 +35,13 @@ import io.realm.Sort
  */
 
 class ContactListUseCase {
+    companion object {
+        private val TAG = ContactListUseCase::class.java.simpleName
+    }
 
-    private val realmHelper: RealmHelper
-    private var service: RestService? = null
-    private val context: Context
+    private lateinit var realmHelper: RealmHelper
+    private lateinit var service: RestService
+    private lateinit var context: Context
 
     constructor(retrofitHelper: RetrofitHelper, realmHelper: RealmHelper, context: Context) {
         this.service = retrofitHelper.restService
@@ -52,11 +55,11 @@ class ContactListUseCase {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun getContactListTest(callback: Callback<List<ContactListResponse>>) {
-        service!!.contactList.subscribe({ responses -> callback.onSuccess(responses) }) { throwable -> callback.onFailure(throwable) }
+        service.contactList.subscribe({ responses -> callback.onSuccess(responses) }) { throwable -> callback.onFailure(throwable) }
     }
 
-    val contactList: Flowable<List<ContactListResponse>>
-        get() = Single.create(SingleOnSubscribe<List<ContactObject>> { emmit ->
+    fun getContactList(): Single<List<ContactListResponse>> {
+        return Single.create(SingleOnSubscribe<List<ContactObject>> { emmit ->
             val realm = Realm.getInstance(realmHelper.buildRealmConfiguration())
             val fieldNames = arrayOf(ContactObject.FIRST_NAME)
             val sort = arrayOf(Sort.ASCENDING)
@@ -78,12 +81,21 @@ class ContactListUseCase {
                         response.add(obj)
                     }
                     response
-                }.toFlowable()
+                }
+    }
 
-    val contactListApi: Flowable<List<ContactListResponse>>
-        get() = service!!.contactList
+    fun getContactListApi(): Single<List<ContactListResponse>> {
+        return service.contactList
                 .compose(RxUtil.singleNewThread<List<ContactListResponse>>())
-                .compose { upstream -> upstream.doOnSuccess { responses -> insertContact(responses) }.doOnError { DialogFactory.showAlertDialog(context) }.doFinally { DialogFactory.dismissAlertDialog() } }.toFlowable()
+                .compose { upstream ->
+                    upstream.doOnSuccess {
+                        responses ->
+                        insertContact(responses)
+                    }.doOnError {
+                        DialogFactory.showAlertDialog(context)
+                    }.doFinally { DialogFactory.dismissAlertDialog() }
+                }
+    }
 
     private fun insertContact(responses: List<ContactListResponse>) {
         Single.create(SingleOnSubscribe<List<ContactListResponse>> {
@@ -106,10 +118,5 @@ class ContactListUseCase {
             realm.close()
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ responses -> Log.d(TAG, "Insert to database: " + responses.size) }) { throwable -> Log.e(TAG, throwable.message, throwable) }
-    }
-
-    companion object {
-
-        private val TAG = ContactListUseCase::class.java!!.getSimpleName()
     }
 }
