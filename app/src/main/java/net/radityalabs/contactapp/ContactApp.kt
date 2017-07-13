@@ -20,11 +20,9 @@ import io.realm.Realm
 
 class ContactApp : Application() {
     companion object {
+        lateinit var instance: ContactApp
 
-        @get:Synchronized var instance: ContactApp? = null
-            private set
         private var sAppComponent: AppComponent? = null
-
         val appComponent: AppComponent
             get() {
                 if (sAppComponent == null) {
@@ -33,11 +31,11 @@ class ContactApp : Application() {
                             .httpModule(HttpModule())
                             .build()
                 }
-                return sAppComponent
+                return sAppComponent as AppComponent
             }
     }
 
-    private var allActivities: MutableSet<Activity>? = null
+    private var allActivities: MutableSet<Activity> = mutableSetOf()
 
     override fun onCreate() {
         super.onCreate()
@@ -56,22 +54,19 @@ class ContactApp : Application() {
     }
 
     fun addActivity(act: Activity) {
-        if (allActivities == null) {
-            allActivities = HashSet<Activity>()
-        }
-        allActivities!!.add(act)
+        allActivities.add(act)
     }
 
     fun removeActivity(act: Activity) {
-        if (allActivities != null) {
-            allActivities!!.remove(act)
+        if (allActivities.size > 0) {
+            allActivities.remove(act)
         }
     }
 
     fun exitApp() {
-        if (allActivities != null) {
+        if (allActivities.size > 0) {
             synchronized(allActivities) {
-                for (act in allActivities!!) {
+                for (act in allActivities) {
                     act.finish()
                 }
             }
