@@ -82,7 +82,7 @@ public class ContactDetailUseCase {
         Single.create(new SingleOnSubscribe<ContactObject>() {
             @Override
             public void subscribe(SingleEmitter<ContactObject> e) throws Exception {
-                Realm realm = Realm.getInstance(realmHelper.buildRealmConfiguration());
+                Realm realm = Realm.getInstance(realmHelper. buildRealmConfiguration());
                 final ContactObject obj = realm.copyFromRealm(realm.where(ContactObject.class).equalTo(ContactObject.ID, userId).findFirst());
                 if (obj != null) {
                     obj.email = response.email;

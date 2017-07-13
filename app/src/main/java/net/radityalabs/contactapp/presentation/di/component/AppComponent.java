@@ -27,8 +27,6 @@ public interface AppComponent {
 
     RealmHelper realmHelper();
 
-    ContactListUseCase contactListUseCase();
-
     ContactDetailUseCase contactDetailUseCase();
 
     AddContactUseCase addContactUseCase();

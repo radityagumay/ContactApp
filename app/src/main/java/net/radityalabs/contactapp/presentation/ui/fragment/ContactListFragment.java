@@ -7,6 +7,7 @@ import android.view.View;
 
 import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
+import net.radityalabs.contactapp.presentation.di.module.ContactListModule;
 import net.radityalabs.contactapp.presentation.factory.DialogFactory;
 import net.radityalabs.contactapp.presentation.factory.SnackbarFactory;
 import net.radityalabs.contactapp.presentation.presenter.ContactListPresenter;
@@ -59,7 +60,7 @@ public class ContactListFragment extends BaseFragment<ContactListPresenter> impl
 
     @Override
     protected void setupInjection() {
-        getFragmentComponent().inject(this);
+        getFragmentComponent().plus(new ContactListModule()).inject(this);
     }
 
     @Override

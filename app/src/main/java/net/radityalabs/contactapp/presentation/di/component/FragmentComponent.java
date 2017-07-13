@@ -2,6 +2,7 @@ package net.radityalabs.contactapp.presentation.di.component;
 
 import android.app.Activity;
 
+import net.radityalabs.contactapp.presentation.di.module.ContactListModule;
 import net.radityalabs.contactapp.presentation.di.module.FragmentModule;
 import net.radityalabs.contactapp.presentation.di.scope.FragmentScope;
 import net.radityalabs.contactapp.presentation.ui.fragment.AddContactFragment;
@@ -20,7 +21,7 @@ public interface FragmentComponent {
 
     Activity getActivity();
 
-    void inject(ContactListFragment contactListFragment);
+    ContactListComponent plus(ContactListModule module);
 
     void inject(ContactDetailFragment contactDetailFragment);
 
