@@ -2,9 +2,11 @@ package net.radityalabs.contactapp.presentation.di.component;
 
 import android.app.Activity;
 
+import net.radityalabs.contactapp.presentation.di.module.ContactDetailModule;
 import net.radityalabs.contactapp.presentation.di.module.ContactListModule;
 import net.radityalabs.contactapp.presentation.di.module.FragmentModule;
 import net.radityalabs.contactapp.presentation.di.scope.FragmentScope;
+import net.radityalabs.contactapp.presentation.presenter.contract.ContactDetailContract;
 import net.radityalabs.contactapp.presentation.ui.fragment.AddContactFragment;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactDetailFragment;
 import net.radityalabs.contactapp.presentation.ui.fragment.ContactListFragment;
@@ -23,7 +25,7 @@ public interface FragmentComponent {
 
     ContactListComponent plus(ContactListModule module);
 
-    void inject(ContactDetailFragment contactDetailFragment);
+    ContactDetailComponent plus(ContactDetailModule module);
 
     void inject(AddContactFragment addContactFragment);
 }

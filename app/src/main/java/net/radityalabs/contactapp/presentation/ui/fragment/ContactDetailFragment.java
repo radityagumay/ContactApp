@@ -14,6 +14,7 @@ import net.radityalabs.contactapp.R;
 import net.radityalabs.contactapp.data.network.response.ContactDetailResponse;
 import net.radityalabs.contactapp.data.network.response.ContactListResponse;
 import net.radityalabs.contactapp.domain.model.ContactDetailInfoModel;
+import net.radityalabs.contactapp.presentation.di.module.ContactDetailModule;
 import net.radityalabs.contactapp.presentation.helper.GlideHelper;
 import net.radityalabs.contactapp.presentation.presenter.ContactDetailPresenter;
 import net.radityalabs.contactapp.presentation.presenter.contract.ContactDetailContract;
@@ -78,7 +79,7 @@ public class ContactDetailFragment extends BaseFragment<ContactDetailPresenter> 
 
     @Override
     protected void setupInjection() {
-        getFragmentComponent().inject(this);
+        getFragmentComponent().plus(new ContactDetailModule()).inject(this);
     }
 
     @Override

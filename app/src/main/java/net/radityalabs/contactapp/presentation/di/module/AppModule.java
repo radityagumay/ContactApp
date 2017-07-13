@@ -45,12 +45,6 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ContactDetailUseCase provideContactDetailUseCase(RetrofitHelper retrofitHelper, RealmHelper realmHelper, ContactApp context) {
-        return new ContactDetailUseCase(retrofitHelper, realmHelper, context.getApplicationContext());
-    }
-
-    @Provides
-    @Singleton
     AddContactUseCase provideAddContactUseCase(RetrofitHelper retrofitHelper, ContactApp context) {
         return new AddContactUseCase(retrofitHelper, context.getApplicationContext());
     }
