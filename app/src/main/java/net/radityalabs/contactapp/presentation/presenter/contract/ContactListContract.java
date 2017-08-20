@@ -11,16 +11,27 @@ import java.util.List;
  */
 
 public interface ContactListContract {
-
     interface View extends BaseView {
         void showContactList(List<ContactListResponse> response);
+
         void showContactListRange(List<ContactListResponse> responses);
+
         void showProgressDialog();
+
         void hideProgressDialog();
     }
 
     interface Presenter extends BasePresenter<View> {
         void getContactList();
+
         void disposed();
     }
 }
+
+/**
+ * 1. Contract
+ * 2. Unit Test
+ * 3. Code
+ * 4. Tun test
+ * 5. Refactor
+ */

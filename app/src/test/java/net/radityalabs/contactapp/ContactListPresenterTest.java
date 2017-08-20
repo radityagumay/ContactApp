@@ -31,10 +31,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by radityagumay on 4/17/17.
- */
-
 @RunWith(MockitoJUnitRunner.class)
 public class ContactListPresenterTest {
 
@@ -63,6 +59,8 @@ public class ContactListPresenterTest {
 
         mockUseCase = new ContactListUseCase(mockService);
         mockUseCase.getContactListTest(callback);
+
+        verify(view).showContactList(generateModel());
 
         verify(callback, Mockito.times(1)).onSuccess(mContactListModel);
         verify(callback, never()).onFailure(any(Throwable.class));
